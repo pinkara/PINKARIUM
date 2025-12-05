@@ -1,6 +1,7 @@
 # 🧪 PINKARIUM
 
-[![Execute experience()](https://img.shields.io/badge/EXPERIENCE-1a1b26?style=for-the-badge&logo=github&logoColor=7aa2f7)]([https://example.com](https://github.io))
+[![Execute experience()](https://img.shields.io/badge/Go%20to%20Experience-7aa2f7?style=for-the-badge)](https://github.io)
+
 
 
 ## **Laboratoire Interactif d'Algorithmes & Mathématiques**
