@@ -23,10 +23,10 @@ Le projet comprend plusieurs modules complets, chacun dédié à un algorithme o
 > [!NOTE][Installation]
 > Useful information that users should know, even when skimming content.
     
-Here is a simple footnote[^1].
+Remerciements[^1].
 
 A footnote can also have multiple lines[^2].
 
-[^1]: My reference.
+[^1]: Tokyo Night Theme par <ins>enkia</ins>
 [^2]: To add line breaks within a footnote, add 2 spaces to the end of a line.  
 This is a second line.
