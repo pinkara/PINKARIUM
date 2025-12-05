@@ -1,7 +1,5 @@
-![https://github.com/pinkara/PINKARIUM](https://raw.githubusercontent.com/pinkara/PINKARIUM/f48b82fc6f51b2bbcb49ea3c23e38619de885149/img/pinkarium_logo.svg)  
-
 <p align="center">
-  <img src="img/pinkarium_logo.svg" width="300" />
+  <img src="img/pinkarium_logo.svg" width="500" />
 </p>
 
 [![Execute experience()](https://img.shields.io/badge/%3CExecute%20experience()%3E-7aa2f7?style=for-the-badge)](https://example.com)
