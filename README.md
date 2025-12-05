@@ -1,4 +1,4 @@
-<p align="center">
+<p align="left">
   <img src="img/pinkarium_logo.svg" width="500" />
 </p>
 
