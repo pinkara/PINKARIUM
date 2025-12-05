@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algo en Mouvement</title>
+    <!-- Chargement de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 
+      Le script principal est maintenant ici, AVANT la configuration de MathJax.
+    -->
+    <script>
+        // --- Configuration des Formules (avec syntaxe LaTeX) ---
+        const formulaData = [
+            { "text": "\\( \\displaystyle  g(n)=\\sum_{i=0}^{k-1} cost(p_i,p_{i+1})\\)", "type": "théorie_des_graphes", "url": "../algo/A_star.html" },
+            { "text": "\\( \\displaystyle X^{n}-\\sum _{k=1}^{n}{\\frac {1}{k}}\\mathrm {tr} (M_{k-1})X^{n-k}  \\)", "type": "algo_numérique", "url": "../algo/Faddeev-Le Verrier.html" },
+            { "text": "\\( {\\displaystyle {\\widehat {f}}(\\xi )=\\int _{-\\infty }^{\\infty }f(x)\\ e^{-i2\\pi \\xi x}\\,dx}  \\)", "type": "transformee_de_Fourier", "url": "../algo/fourier_drawing.html" },
+            { "text": "\\( {\\displaystyle J_{\\pi}(A) = J_{\\pi}(S) + \\left\\lfloor \\dfrac{a}{12} \\right\\rfloor + (a \\bmod 12) + \\left\\lfloor \\dfrac{a \\bmod 12}{4} \\right\\rfloor \\pmod{7}}  \\)", "type": "calendrier", "url": "../algo/doomsday.html" },
+            { "text": "\\( {\\displaystyle h=\\left(q+\\left\\lfloor {\\frac {13(m+1)}{5}}\\right\\rfloor +K+\\left\\lfloor {\\frac {K}{4}}\\right\\rfloor +\\left\\lfloor {\\frac {J}{4}}\\right\\rfloor -2J\\right){\\bmod {7}} }  \\)", "type": "calendrier", "url": "404.html" },
+        ];
+        
+        
+        // --- Initialisation et Animation ---
+
+        // Ces variables sont globales au script
+        let container; // Sera assigné dans main()
+        const formulas = [];
+        
+        // Vitesses aléatoires
+        const MIN_SPEED = 0.5;
+        const MAX_SPEED = 2.5;
+
+        // Fonction principale appelée par MathJax quand il est prêt
+        async function main() {
+            // Assignation du conteneur maintenant que le DOM est prêt
+            container = document.getElementById('animation-container');
+            
+            // initFormulas est 'async' pour attendre le rendu
+            await initFormulas();
+            // On lance l'animation seulement après le rendu
+            animate();
+        }
+
+        async function initFormulas() {
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+
+            for (const [index, data] of formulaData.entries()) {
+                const el = document.createElement('div');
+                el.id = `formula-${index}`;
+                el.className = `formula ${data.type}`;
+                // On injecte le code LaTeX
+                el.innerHTML = data.text;
+                
+                // Position de départ aléatoire temporaire (sera ajustée après le rendu)
+                el.style.left = `0px`;
+                el.style.top = `0px`;
+                el.style.visibility = 'hidden'; // On cache pendant le rendu pour éviter le flash
+
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    window.open(data.url, '_blank');
+                });
+                
+                container.appendChild(el);
+                
+                // On prépare l'objet mais on attend le rendu pour les dimensions
+                formulas.push({
+                    el: el,
+                    data: data, // On garde une ref aux données
+                    x: 0,
+                    y: 0,
+                    vx: 0,
+                    vy: 0,
+                    width: 0, 
+                    height: 0
+                });
+            }
+
+            // ÉTAPE CRUCIALE :
+            // Dire à MathJax de "composer" (rendre) toutes les nouvelles formules
+            await MathJax.typesetPromise([container]);
+            
+            // 2. Maintenant que le rendu est fait, on initialise positions et vitesses
+            formulas.forEach(f => {
+                f.el.style.visibility = 'visible'; // On affiche maintenant
+                f.width = f.el.offsetWidth;
+                f.height = f.el.offsetHeight;
+
+                // Position de départ aléatoire en prenant en compte la taille réelle
+                f.x = Math.random() * (containerWidth - f.width);
+                f.y = Math.random() * (containerHeight - f.height);
+                
+                // Vitesse aléatoire
+                const speed = Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
+                const angle = Math.random() * 2 * Math.PI;
+                f.vx = Math.cos(angle) * speed;
+                f.vy = Math.sin(angle) * speed;
+
+                // Application initiale
+                f.el.style.left = `${f.x}px`;
+                f.el.style.top = `${f.y}px`;
+            });
+        }
+
+        function animate() {
+            // S'assurer que le conteneur existe
+            if (!container) return; 
+
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+
+            formulas.forEach(f => {
+                // Mettre à jour la position
+                f.x += f.vx;
+                f.y += f.vy;
+
+                // Détection des collisions avec les bords
+                // Droite
+                if (f.x + f.width > containerWidth) {
+                    f.x = containerWidth - f.width;
+                    f.vx *= -1;
+                }
+                // Gauche
+                if (f.x < 0) {
+                    f.x = 0;
+                    f.vx *= -1;
+                }
+                // Bas
+                if (f.y + f.height > containerHeight) {
+                    f.y = containerHeight - f.height;
+                    f.vy *= -1;
+                }
+                // Haut
+                if (f.y < 0) {
+                    f.y = 0;
+                    f.vy *= -1;
+                }
+
+                // Appliquer la nouvelle position
+                f.el.style.left = `${f.x}px`;
+                f.el.style.top = `${f.y}px`;
+            });
+
+            // Boucle d'animation
+            requestAnimationFrame(animate);
+        }
+    </script>
+
+    <!-- 
+      Configuration et chargement de MathJax pour le rendu LaTeX.
+    -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['\\(', '\\)']]
+        },
+        startup: {
+          ready: async () => {
+            // D'abord, exécuter l'initialisation par défaut de MathJax
+            await MathJax.startup.defaultReady();
+            // Ensuite, exécuter notre propre code principal
+            await main();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        /* Particules flottantes */
+    /*    
+    .particle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--tn-cyan);
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 8px var(--tn-cyan);
+  animation: float 12s ease-in-out infinite;
+    }
+
+    @keyframes float {
+  0%, 100% { 
+    opacity: 0; 
+    transform: translateY(0) translateX(0); 
+  }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { 
+    transform: translateY(-100vh) translateX(80px) rotate(360deg); 
+  }
+    } */
+    </style>
+    <script>
+        /*<!-- Particules -->
+  for(let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.animationDelay = Math.random() * 12 + 's';
+    p.style.animationDuration = (10 + Math.random() * 6) + 's';
+    document.body.appendChild(p);
+  } 
+    </script>
+    <style>
+        /* Police de caractères Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            position: relative;
+            background-color: #16161e;
+            color: #1a1b26;
+        }
+        
+        /* Style des formules avec effet "verre dépoli" (glassmorphism)
+        */
+        .formula {
+            position: absolute;
+            padding: 0.75rem 1.25rem; /* 12px 20px */
+            border-radius: 0.5rem; /* 8px */
+            
+            /* Fond semi-transparent pour l'effet de verre */
+            background-color: rgba(255, 255, 255, 0.05);
+            
+            /* Le flou en arrière-plan */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); /* Support pour Safari */
+            
+            /* Bordure subtile */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            font-size: 1.125rem; /* 18px */
+            user-select: none; /* Empêche la sélection */
+            
+            /* CORRECTION ICI : Adapter la largeur au contenu */
+            width: fit-content;
+            max-width: 90vw; /* Empêche de dépasser l'écran sur mobile */
+            white-space: nowrap; /* Tente de garder la formule sur une ligne */
+            
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .formula:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: scale(1.05);
+            z-index: 50;
+        }
+
+        /* Couleurs du TEXTE pour chaque type
+        */
+        .exploration_de_données {
+            color: #f7768e; 
+        }
+        .transformee_de_Fourier {
+            color: #7e9cf0; /* un bleu spectral par exemple */
+        }
+
+        .calendrier {
+            color: #d186f8; /* violet clair Tokyo Night */
+        }
+        
+        .optimisation {
+            color: #ff9e64;
+        }
+
+        .chaine_de_caractères {
+            color: #e0af68; 
+        }
+        .classification {
+            color: #cfc9c2; 
+        }
+
+        .compression {
+            color: #9ece6a; 
+        }
+
+        .crypto {
+            color: #73daca; 
+        }
+
+        .detection_et_corrction_erreur {
+            color: #b4f9f8; 
+        }
+
+        .exclusion_mutuelle {
+            color: #2ac3de; 
+        }
+
+        .factorisation_des_entiers {
+            color: #7dcfff; 
+        }
+
+        .geométrie_algo {
+            color: #7aa2f7; 
+        }
+
+        .théorie_des_graphes {
+            color: #bb9af7; 
+        }
+
+        .hachage {
+            color: #c0caf5; 
+        }
+
+        .infographie {
+            color: #a9b1d6; 
+        }
+
+        .itération {
+            color: #9aa5ce; 
+        }
+
+        .algo_numérique {
+            color: #565f89; 
+        }
+
+        .algo_ordonnancement {
+            color: #414868; 
+        }
+
+        .partitionnement_de_données {
+            color: #8f5e15; 
+        }
+
+        .algo_proba {
+            color: #965027; 
+        }
+
+        .algo_recherche {
+            color: #8c4351; 
+        }
+
+        .algo_tri {
+            color: #f871b3; 
+        }
+        /* Grille animée blueprint */
+.bg-grid {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: 
+    linear-gradient(#292e42 1.5px, transparent 1.5px),
+    linear-gradient(90deg, #292e42 1.5px, transparent 1.5px);
+  background-size: 60px 60px;
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+  animation: gridMove 25s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(60px, 60px); }
+}
+    </style>
+    <!-- Importation de la police Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="body h-screen w-screen text-white">
+    <div class="bg-grid"></div>
+
+    <!-- Conteneur principal pour l'animation -->
+    <div id="animation-container" class="absolute inset-0">
+        <!-- Les formules seront injectées ici -->
+    </div>
+
+    <!-- Titre et instructions (également avec effet de flou) -->
+    <div class="relative z-10 p-8 text-center bg-black bg-opacity-30 backdrop-blur-md rounded-lg max-w-2xl mx-auto mt-12 shadow-lg">
+        <h1 class="text-4xl font-bold mb-4">Explorez les Algorithmes</h1>
+        <p class="text-lg text-gray-300">Cliquez sur une formule pour en savoir plus.</p>
+    </div>
+
+</body>
+</html>
