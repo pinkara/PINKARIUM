@@ -20,8 +20,18 @@ Le projet comprend plusieurs modules complets, chacun dédié à un algorithme o
 
 
 
-> [!NOTE][Installation]
-> Useful information that users should know, even when skimming content.
+> [!NOTE]
+> Ce projet utilise uniquement du JavaScript vanilla pour maximiser la performance.
+> Aucune dépendance externe n'est requise hormis les CDN (MathJax, Tailwind).
+
+
+> [!TIP]
+> Pour de meilleures performances, utilisez Chrome ou Firefox.
+> Les animations Fourier peuvent être ralenties avec le slider de vitesse.
+
+> [!WARNING]
+> Le module Fourier avec des dessins très complexes (>5000 points) 
+> peut ralentir sur mobile. Simplifiez votre tracé si nécessaire.
     
 Remerciements[^1].
 
