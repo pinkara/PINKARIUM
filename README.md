@@ -50,34 +50,34 @@ python -m http.server 8000
 > Palette Tokyo Night 
 ### Couleurs Principales
 
-| Nom | Hex | RGB | Usage | Preview |
-|-----|-----|-----|-------|---------|
-| **Background Deep** | `#16161e` | `rgb(22, 22, 30)` | Fond principal profond | ![#16161e](https://via.placeholder.com/50x20/16161e/16161e.png) |
-| **Background** | `#1a1b26` | `rgb(26, 27, 38)` | Fond principal | ![#1a1b26](https://via.placeholder.com/50x20/1a1b26/1a1b26.png) |
-| **Background Storm** | `#24283b` | `rgb(36, 40, 59)` | Fond secondaire | ![#24283b](https://via.placeholder.com/50x20/24283b/24283b.png) |
-| **Foreground** | `#c0caf5` | `rgb(192, 202, 245)` | Texte principal | ![#c0caf5](https://via.placeholder.com/50x20/c0caf5/c0caf5.png) |
-| **Foreground Alt** | `#a9b1d6` | `rgb(169, 177, 214)` | Texte secondaire | ![#a9b1d6](https://via.placeholder.com/50x20/a9b1d6/a9b1d6.png) |
+| Nom | Hex | Usage | Preview |
+|-----|-----|-------|---------|
+| **Background Deep** | `#16161e` | Fond principal profond | ![](https://img.shields.io/badge/-%2316161e-16161e?style=flat-square) |
+| **Background** | `#1a1b26` | Fond principal | ![](https://img.shields.io/badge/-%231a1b26-1a1b26?style=flat-square) |
+| **Background Storm** | `#24283b` | Fond secondaire | ![](https://img.shields.io/badge/-%2324283b-24283b?style=flat-square) |
+| **Foreground** | `#c0caf5` | Texte principal | ![](https://img.shields.io/badge/-%23c0caf5-c0caf5?style=flat-square) |
+| **Foreground Alt** | `#a9b1d6` | Texte secondaire | ![](https://img.shields.io/badge/-%23a9b1d6-a9b1d6?style=flat-square) |
 
 ### Couleurs Accentuées
 
-| Nom | Hex | RGB | Usage | Preview |
-|-----|-----|-----|-------|---------|
-| **Blue** | `#7aa2f7` | `rgb(122, 162, 247)` | Boutons, liens, accents | ![#7aa2f7](https://via.placeholder.com/50x20/7aa2f7/7aa2f7.png) |
-| **Cyan** | `#7dcfff` | `rgb(125, 207, 255)` | Titres, highlights | ![#7dcfff](https://via.placeholder.com/50x20/7dcfff/7dcfff.png) |
-| **Magenta** | `#bb9af7` | `rgb(187, 154, 247)` | Tracés, éléments créatifs | ![#bb9af7](https://via.placeholder.com/50x20/bb9af7/bb9af7.png) |
-| **Purple** | `#9d7cd8` | `rgb(157, 124, 216)` | Variante magenta | ![#9d7cd8](https://via.placeholder.com/50x20/9d7cd8/9d7cd8.png) |
-| **Green** | `#9ece6a` | `rgb(158, 206, 106)` | Succès, validations | ![#9ece6a](https://via.placeholder.com/50x20/9ece6a/9ece6a.png) |
-| **Teal** | `#1abc9c` | `rgb(26, 188, 156)` | Info, données | ![#1abc9c](https://via.placeholder.com/50x20/1abc9c/1abc9c.png) |
-| **Yellow** | `#e0af68` | `rgb(224, 175, 104)` | Avertissements doux | ![#e0af68](https://via.placeholder.com/50x20/e0af68/e0af68.png) |
-| **Orange** | `#ff9e64` | `rgb(255, 158, 100)` | Warnings, points clés | ![#ff9e64](https://via.placeholder.com/50x20/ff9e64/ff9e64.png) |
-| **Red** | `#f7768e` | `rgb(247, 118, 142)` | Erreurs, danger | ![#f7768e](https://via.placeholder.com/50x20/f7768e/f7768e.png) |
+| Nom | Hex | Usage | Preview |
+|-----|-----|-------|---------|
+| **Blue** | `#7aa2f7` | Boutons, liens | ![](https://img.shields.io/badge/-%237aa2f7-7aa2f7?style=flat-square) |
+| **Cyan** | `#7dcfff` | Titres, highlights | ![](https://img.shields.io/badge/-%237dcfff-7dcfff?style=flat-square) |
+| **Magenta** | `#bb9af7` | Tracés, créatif | ![](https://img.shields.io/badge/-%23bb9af7-bb9af7?style=flat-square) |
+| **Purple** | `#9d7cd8` | Variante magenta | ![](https://img.shields.io/badge/-%239d7cd8-9d7cd8?style=flat-square) |
+| **Green** | `#9ece6a` | Succès, validations | ![](https://img.shields.io/badge/-%239ece6a-9ece6a?style=flat-square) |
+| **Teal** | `#1abc9c` | Info, données | ![](https://img.shields.io/badge/-%231abc9c-1abc9c?style=flat-square) |
+| **Yellow** | `#e0af68` | Avertissements | ![](https://img.shields.io/badge/-%23e0af68-e0af68?style=flat-square) |
+| **Orange** | `#ff9e64` | Warnings | ![](https://img.shields.io/badge/-%23ff9e64-ff9e64?style=flat-square) |
+| **Red** | `#f7768e` | Erreurs, danger | ![](https://img.shields.io/badge/-%23f7768e-f7768e?style=flat-square) |
 
 ### Couleurs Utilitaires
 
-| Nom | Hex | RGB | Usage | Preview |
-|-----|-----|-----|-------|---------|
-| **Comment** | `#565f89` | `rgb(86, 95, 137)` | Commentaires, texte désactivé | ![#565f89](https://via.placeholder.com/50x20/565f89/565f89.png) |
-| **Border** | `#414868` | `rgb(65, 72, 104)` | Bordures, séparateurs | ![#414868](https://via.placeholder.com/50x20/414868/414868.png) |
-| **Grid** | `#292e42` | `rgb(41, 46, 66)` | Grille de fond | ![#292e42](https://via.placeholder.com/50x20/292e42/292e42.png) |
+| Nom | Hex | Usage | Preview |
+|-----|-----|-------|---------|
+| **Comment** | `#565f89` | Commentaires | ![](https://img.shields.io/badge/-%23565f89-565f89?style=flat-square) |
+| **Border** | `#414868` | Bordures | ![](https://img.shields.io/badge/-%23414868-414868?style=flat-square) |
+| **Grid** | `#292e42` | Grille de fond | ![](https://img.shields.io/badge/-%23292e42-292e42?style=flat-square) |
 
 
