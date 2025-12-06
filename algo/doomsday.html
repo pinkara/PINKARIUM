@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Atelier Doomsday — PINKARIUM</title>
+  <link rel="icon" href="https://pinkara.github.io/PINKARIUM/favicon/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/favicon-48x48.png" sizes="48x48">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/android-chrome-512x512.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="https://pinkara.github.io/PINKARIUM/favicon/apple-touch-icon.png">
+    <link rel="mask-icon" href="https://pinkara.github.io/PINKARIUM/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="icon" href="https://pinkara.github.io/PINKARIUM/favicon/favicon.svg" type="image/svg+xml">
+  <!-- Tailwind (Mise en page) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Police Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Prism CSS (Custom Tokyo Night) -->
+  <style>
+    :root{
+      --tn-bg: #1a1b26;
+      --tn-bg-2: #0f1724;
+      --tn-foreground: #a9b1d6;
+      --tn-white: #c0caf5;
+      --tn-blue: #7aa2f7;
+      --tn-cyan: #7dcfff;
+      --tn-green: #9ece6a;
+      --tn-yellow: #e0af68;
+      --tn-orange: #ff9e64;
+      --tn-magenta: #bb9af7;
+      --tn-red: #f7768e;
+      --tn-comment: #565f89;
+      --tn-border: #414868;
+      --tn-storm: #24283b;
+    }
+    body { background: var(--tn-bg); color: var(--tn-foreground); font-family: 'Inter', sans-serif; margin: 0; }
+    
+    /* Layout Grid */
+    .container { max-width: 1350px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 500px; gap: 20px; }
+    @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(122,162,247,0.1);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+    }
+
+    /* Typography & Math */
+    h1 { color: var(--tn-white); font-weight: 800; font-size: 1.5rem; margin:0; }
+    h2 { color: var(--tn-blue); font-weight: 700; font-size: 1.2rem; margin: 0 0 12px 0; }
+    h3 { color: var(--tn-cyan); font-weight: 600; font-size: 1rem; margin: 15px 0 8px 0; }
+    p { line-height: 1.6; margin-bottom: 12px; opacity: 0.9; }
+    
+    .math-box {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--tn-storm);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid var(--tn-magenta);
+      margin: 15px 0;
+      color: var(--tn-white);
+      overflow-x: auto;
+    }
+
+    /* Buttons & Inputs */
+    .btn { background: var(--tn-blue); color: #000; padding: 8px 16px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn.secondary { background: transparent; border: 1px solid var(--tn-border); color: var(--tn-white); }
+    .btn.danger { background: rgba(247,118,142,0.1); border: 1px solid var(--tn-red); color: var(--tn-red); }
+    
+    .input { 
+      background: var(--tn-bg-2); 
+      border: 1px solid var(--tn-border); 
+      color: var(--tn-white); 
+      padding: 8px 12px; 
+      border-radius: 6px; 
+      font-family: 'JetBrains Mono', monospace;
+      text-align: center;
+      width: 140px;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--tn-border); padding-bottom: 10px; }
+    .tab-btn { background: none; border: none; color: var(--tn-comment); cursor: pointer; font-weight: 600; padding: 5px 10px; transition: color 0.2s; }
+    .tab-btn.active { color: var(--tn-cyan); border-bottom: 2px solid var(--tn-cyan); }
+    .tab-btn:hover { color: var(--tn-white); }
+
+    /* Tables */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .data-table th { text-align: left; padding: 8px; color: var(--tn-orange); border-bottom: 1px solid var(--tn-border); }
+    .data-table td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+    /* --- TOKYO NIGHT PRISM THEME --- */
+    pre[class*="language-"] {
+      background: var(--tn-bg-2) !important;
+      border: 1px solid var(--tn-border);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      text-shadow: none !important;
+    }
+    
+    /* Token Colors (Exact Tokyo Night) */
+    .token.comment, .token.prolog, .token.doctype, .token.cdata { color: var(--tn-comment) !important; font-style: italic; }
+    .token.punctuation { color: var(--tn-cyan) !important; }
+    .token.namespace { opacity: .7; }
+    .token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: var(--tn-orange) !important; }
+    .token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: var(--tn-green) !important; }
+    .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string { color: var(--tn-cyan) !important; }
+    .token.atrule, .token.attr-value, .token.keyword { color: var(--tn-magenta) !important; }
+    .token.function, .token.class-name { color: var(--tn-blue) !important; }
+    .token.regex, .token.important, .token.variable { color: var(--tn-yellow) !important; }
+    
+    /* Interactive Tokens */
+    .clickable {
+      cursor: help;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-decoration-color: rgba(122, 162, 247, 0.4);
+      transition: all 0.2s;
+    }
+    .clickable:hover {
+      background: rgba(122, 162, 247, 0.15);
+      border-radius: 4px;
+      color: var(--tn-white) !important;
+      text-decoration: none;
+    }
+
+    /* Popover */
+    .popover-panel {
+      position: fixed;
+      z-index: 10000;
+      background: var(--tn-bg);
+      border: 1px solid var(--tn-border);
+      border-left: 3px solid var(--tn-blue);
+      border-radius: 8px;
+      padding: 12px 16px;
+      width: 300px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .popover-visible { opacity: 1; transform: translateY(0); }
+    .popover-title { color: var(--tn-blue); font-weight: 700; margin-bottom: 4px; font-size: 0.95rem; }
+    .popover-body { color: var(--tn-foreground); font-size: 0.85rem; line-height: 1.5; }
+
+    /* Slides */
+    .slide { display: none; animation: fadeIn 0.3s ease; }
+    .slide.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  </style>
+
+  <!-- Prism JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT COLUMN: Content & Tools -->
+  <div>
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+        <div style="width:50px; height:50px; background:linear-gradient(135deg, var(--tn-red), var(--tn-orange)); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#1a1b26; font-weight:800; font-size:1.5rem;">π</div>
+        <div>
+          <h1>Algorithme Doomsday</h1>
+          <div style="color:var(--tn-comment); font-size:0.9rem;">Calcul mental du jour de la semaine</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchSlide('theory')">Théorie & Formule</button>
+        <button class="tab-btn" onclick="switchSlide('dates')">Dates Clés (Pi)</button>
+        <button class="tab-btn" onclick="switchSlide('calculator')">Calculateur</button>
+        <button class="tab-btn" onclick="switchSlide('training')">Entraînement</button>
+      </div>
+
+      <!-- SLIDE 1: THEORY -->
+      <div id="slide-theory" class="slide active">
+        <h2>Principe Général</h2>
+        <p>L'algorithme "Doomsday" repose sur le fait que certaines dates faciles à retenir (les "Doomsdays") tombent toujours le <strong>même jour de la semaine</strong> pour une année donnée.</p>
+        
+        <div class="math-box">
+          $$ J_{\pi}(A) = J_{\pi}(S) + a + \left\lfloor \frac{a}{4} \right\rfloor \pmod{7} $$
+        </div>
+        <p style="font-size:0.9rem; color:var(--tn-comment);">
+          Note : La formule ci-dessus est la version simplifiée. La version complète (Wikibooks) décompose $a$ en multiples de 12.
+        </p>
+
+        <h3>L'Ancre du Siècle $J_{\pi}(S)$</h3>
+        <p>Elle dépend des deux premiers chiffres de l'année (ex: 19 pour 1985).</p>
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; text-align:center; margin-bottom:15px;">
+          <div style="background:var(--tn-bg-2); padding:10px; border-radius:6px;">
+            <div style="color:var(--tn-orange); font-weight:bold;">18xx</div>
+            <div style="font-size:1.2rem;">Vendredi (5)</div>
+          </div>
+          <div style="background:var(--tn-bg-2); padding:10px; border-radius:6px;">
+            <div style="color:var(--tn-orange); font-weight:bold;">19xx</div>
+            <div style="font-size:1.2rem;">Mercredi (3)</div>
+          </div>
+          <div style="background:var(--tn-bg-2); padding:10px; border-radius:6px;">
+            <div style="color:var(--tn-orange); font-weight:bold;">20xx</div>
+            <div style="font-size:1.2rem;">Mardi (2)</div>
+          </div>
+          <div style="background:var(--tn-bg-2); padding:10px; border-radius:6px;">
+            <div style="color:var(--tn-orange); font-weight:bold;">21xx</div>
+            <div style="font-size:1.2rem;">Dimanche (0)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: DATES -->
+      <div id="slide-dates" class="slide">
+        <h2>Les Dates Pivots (Doomsdays)</h2>
+        <p>Pour une année donnée, toutes ces dates tombent le même jour. C'est votre point de référence.</p>
+        
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Mois</th>
+              <th>Date Pivot</th>
+              <th>Moyen mnémotechnique</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Janvier</td><td>3 ou 4</td><td>3 (normal), 4 (bissextile)</td></tr>
+            <tr><td>Février</td><td>28 ou 29</td><td>Dernier jour du mois</td></tr>
+            <tr><td>Mars</td><td>14</td><td>14/3 (Jour de Pi : 3.14)</td></tr>
+            <tr><td>Avril</td><td>4</td><td>04/04 (Pair)</td></tr>
+            <tr><td>Mai</td><td>9</td><td>9 à 5 (travail) -> 09/05</td></tr>
+            <tr><td>Juin</td><td>6</td><td>06/06 (Pair)</td></tr>
+            <tr><td>Juillet</td><td>11</td><td>7 Eleven -> 11/07</td></tr>
+            <tr><td>Août</td><td>8</td><td>08/08 (Pair)</td></tr>
+            <tr><td>Septembre</td><td>5</td><td>9 à 5 -> 05/09</td></tr>
+            <tr><td>Octobre</td><td>10</td><td>10/10 (Pair)</td></tr>
+            <tr><td>Novembre</td><td>7</td><td>7 Eleven -> 07/11</td></tr>
+            <tr><td>Décembre</td><td>12</td><td>12/12 (Pair)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SLIDE 3: CALCULATOR -->
+      <div id="slide-calculator" class="slide">
+        <h2>Calculateur Pas-à-Pas</h2>
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:20px;">
+          <input type="text" id="calc-input" class="input" value="14/07/1789" placeholder="JJ/MM/AAAA">
+          <button class="btn" onclick="runCalculation()">Calculer</button>
+        </div>
+
+        <div id="calc-steps" style="display:none;">
+          <!-- Dynamic Steps will be injected here -->
+        </div>
+      </div>
+
+      <!-- SLIDE 4: TRAINING -->
+      <div id="slide-training" class="slide">
+        <h2>Mode Entraînement</h2>
+        <p>Une date aléatoire est générée. À vous de trouver le jour de la semaine !</p>
+        
+        <div style="background:var(--tn-bg-2); padding:20px; border-radius:12px; text-align:center; margin:20px 0;">
+          <div id="train-date" style="font-size:2rem; font-weight:800; color:var(--tn-cyan); margin-bottom:10px;">?</div>
+          <div style="display:flex; justify-content:center; gap:10px; margin-top:15px;">
+            <button class="btn secondary" onclick="generateTrainingDate()">Nouvelle Date</button>
+            <button class="btn" onclick="revealTraining()">Révéler la réponse</button>
+          </div>
+          <div id="train-answer" style="margin-top:15px; font-size:1.2rem; color:var(--tn-green); font-weight:bold; min-height:1.5em;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Code & Logic -->
+  <div>
+    <div class="card" style="position:sticky; top:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="margin:0; font-size:1rem; color:var(--tn-white);">Implémentation Python</h2>
+        <span style="font-size:0.75rem; color:var(--tn-comment);">Survolez les mots-clés</span>
+      </div>
+
+      <pre class="line-numbers"><code id="python-code" class="language-python">def J_pi_century(year):
+    """Ancre du siècle (Règle des 2-0-5-3)"""
+    c = (year // 100) * 100
+    r = c % 400
+    if r == 0: return 2   # 1600, 2000 -> Mardi
+    if r == 100: return 0 # 1700, 2100 -> Dimanche
+    if r == 200: return 5 # 1800 -> Vendredi
+    return 3              # 1900 -> Mercredi
+
+def is_leap(year):
+    return (year % 4 == 0 and year % 100 != 0) or \
+           (year % 400 == 0)
+
+def J_pi_year(year):
+    """Formule Wikibooks pour l'année"""
+    a = year % 100
+    century_anchor = J_pi_century(year)
+    
+    # Décomposition par douzaines
+    dozens = a // 12
+    remainder = a % 12
+    fours = remainder // 4
+    
+    return (century_anchor + dozens + remainder + fours) % 7
+
+def get_day(day, month, year):
+    # Table des pivots (Doomsdays)
+    pivots = {
+        1: 4 if is_leap(year) else 3,
+        2: 29 if is_leap(year) else 28,
+        3: 14, 4: 4, 5: 9, 6: 6,
+        7: 11, 8: 8, 9: 5, 10: 10, 
+        11: 7, 12: 12
+    }
+    
+    anchor_day = J_pi_year(year) # Jour pivot de l'année
+    pivot_date = pivots[month]
+    
+    diff = day - pivot_date
+    final_day = (anchor_day + diff) % 7
+    
+    days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
+    return days[final_day]
+
+# --- Exemple d'utilisation ---
+# Quel jour était le 14 juillet 1789 ?
+print(get_day(14, 7, 1789))
+# Résultat attendu : 'Mar' (Mardi)
+</code></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- Popover -->
+<div id="popover" class="popover-panel">
+  <div id="pop-title" class="popover-title">Titre</div>
+  <div id="pop-desc" class="popover-body">Description...</div>
+</div>
+
+<script>
+/* =========================================
+   LOGIQUE DE L'ALGORITHME
+   ========================================= */
+const DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+
+function getCenturyAnchor(year) {
+  const c = Math.floor(year/100) * 100;
+  const r = c % 400;
+  if (r === 0) return { val: 2, name: "Mardi" }; // 1600, 2000
+  if (r === 100) return { val: 0, name: "Dimanche" }; // 1700
+  if (r === 200) return { val: 5, name: "Vendredi" }; // 1800
+  return { val: 3, name: "Mercredi" }; // 1900
+}
+
+function isLeap(y) {
+  return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+}
+
+function getYearAnchor(year) {
+  const anchorC = getCenturyAnchor(year).val;
+  const a = year % 100;
+  const dozens = Math.floor(a / 12);
+  const remainder = a % 12;
+  const fours = Math.floor(remainder / 4);
+  const result = (anchorC + dozens + remainder + fours) % 7;
+  return { val: result, steps: { anchorC, dozens, remainder, fours } };
+}
+
+function getPivot(m, y) {
+  const leap = isLeap(y);
+  const map = {
+    1: leap ? 4 : 3, 2: leap ? 29 : 28, 3: 14, 4: 4, 5: 9, 6: 6,
+    7: 11, 8: 8, 9: 5, 10: 10, 11: 7, 12: 12
+  };
+  return map[m];
+}
+
+/* =========================================
+   UI INTERACTION
+   ========================================= */
+
+// Navigation
+function switchSlide(id) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('slide-' + id).classList.add('active');
+  
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Calculateur
+function runCalculation() {
+  const input = document.getElementById('calc-input').value;
+  const parts = input.split('/');
+  if (parts.length !== 3) { alert("Format invalide (JJ/MM/AAAA)"); return; }
+  
+  const d = parseInt(parts[0]);
+  const m = parseInt(parts[1]);
+  const y = parseInt(parts[2]);
+  
+  const anchorY = getYearAnchor(y);
+  const pivotDate = getPivot(m, y);
+  const diff = d - pivotDate;
+  let finalDayIndex = (anchorY.val + diff) % 7;
+  if (finalDayIndex < 0) finalDayIndex += 7;
+  
+  const html = `
+    <div class="block" style="background:rgba(255,255,255,0.03); padding:15px; border-radius:8px; margin-top:15px; border-left:4px solid var(--tn-green);">
+      <h3 style="margin-top:0; color:var(--tn-green);">Résultat : ${DAYS[finalDayIndex]}</h3>
+      
+      <div style="font-size:0.9rem; margin-top:10px;">
+        <strong>1. Ancre du Siècle (${Math.floor(y/100)}xx) :</strong> ${getCenturyAnchor(y).name} (${getCenturyAnchor(y).val})<br>
+        <strong>2. Calcul Année (${y%100}) :</strong> ${anchorY.steps.anchorC} + ${anchorY.steps.dozens} (douzaines) + ${anchorY.steps.remainder} (reste) + ${anchorY.steps.fours} (div 4) = <strong>${anchorY.val} (${DAYS[anchorY.val]})</strong><br>
+        <strong>3. Pivot du Mois (${m}) :</strong> Le ${pivotDate}<br>
+        <strong>4. Décalage :</strong> ${d} - ${pivotDate} = ${diff} jours<br>
+        <strong>5. Final :</strong> ${DAYS[anchorY.val]} + ${diff} jours = <strong>${DAYS[finalDayIndex]}</strong>
+      </div>
+    </div>
+  `;
+  
+  const container = document.getElementById('calc-steps');
+  container.style.display = 'block';
+  container.innerHTML = html;
+}
+
+// Entraînement
+let currentTrainDate = null;
+
+function generateTrainingDate() {
+  const y = Math.floor(Math.random() * (2100 - 1800) + 1800);
+  const m = Math.floor(Math.random() * 12) + 1;
+  const maxD = new Date(y, m, 0).getDate();
+  const d = Math.floor(Math.random() * maxD) + 1;
+  
+  currentTrainDate = { d, m, y };
+  document.getElementById('train-date').innerText = `${d < 10 ? '0'+d : d}/${m < 10 ? '0'+m : m}/${y}`;
+  document.getElementById('train-answer').innerText = "";
+}
+
+function revealTraining() {
+  if (!currentTrainDate) return;
+  const { d, m, y } = currentTrainDate;
+  const anchorY = getYearAnchor(y);
+  const pivotDate = getPivot(m, y);
+  const diff = d - pivotDate;
+  let finalDayIndex = (anchorY.val + diff) % 7;
+  if (finalDayIndex < 0) finalDayIndex += 7;
+  
+  document.getElementById('train-answer').innerText = DAYS[finalDayIndex];
+}
+
+// Initial Call
+generateTrainingDate();
+
+
+/* =========================================
+   POPOVERS & SYNTAX HIGHLIGHTING ENHANCEMENT
+   ========================================= */
+const definitions = {
+  'def': { title:'def', text:'Déclare une fonction.' },
+  'return': { title:'return', text:'Renvoie le résultat et quitte la fonction.' },
+  'if': { title:'if', text:'Conditionnelle : exécute si vrai.' },
+  'else': { title:'else', text:'Sinon : exécute si la condition précédente est fausse.' },
+  'for': { title:'for', text:'Boucle sur une séquence.' },
+  'in': { title:'in', text:'Opérateur d\'appartenance.' },
+  'and': { title:'and', text:'Opérateur logique ET.' },
+  'or': { title:'or', text:'Opérateur logique OU.' },
+  'not': { title:'not', text:'Négation logique.' },
+  '//': { title:'Division Entière', text:'Divise sans garder la partie décimale (ex: 5 // 2 = 2).' },
+  '%': { title:'Modulo', text:'Reste de la division euclidienne (ex: 5 % 2 = 1).' },
+  'range': { title:'range', text:'Génère une séquence de nombres.' },
+  'J_pi_century': { title:'Fonction', text:'Calcule le jour pivot du siècle (Mardi, Dimanche, Vendredi ou Mercredi).' },
+  'is_leap': { title:'Fonction', text:'Vérifie si une année est bissextile (366 jours).' },
+  'J_pi_year': { title:'Fonction', text:'Calcule le "Doomsday" de l\'année spécifique.' },
+  'print': { title:'print', text:'Affiche des informations dans la console.' }
+};
+
+window.addEventListener('load', () => {
+  // Injecter les définitions dans Prism pour la coloration ET l'interactivité
+  const customKeys = Object.keys(definitions).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  
+  Prism.languages.python['custom-highlight'] = {
+    pattern: new RegExp(`\\b(${customKeys})\\b`),
+    alias: 'custom-highlight'
+  };
+  
+  Prism.highlightAll();
+  setTimeout(attachPopovers, 100);
+});
+
+function attachPopovers() {
+  const codeBlock = document.getElementById('python-code');
+  const tokens = codeBlock.querySelectorAll('.token');
+  
+  tokens.forEach(token => {
+    const text = token.textContent.trim();
+    // Gestion des symboles comme // ou %
+    let key = text;
+    
+    if (definitions[key]) {
+      token.classList.add('clickable');
+      token.dataset.key = key;
+      token.addEventListener('mouseenter', showPopover);
+      token.addEventListener('mousemove', movePopover);
+      token.addEventListener('mouseleave', hidePopover);
+    }
+  });
+}
+
+const popover = document.getElementById('popover');
+const popTitle = document.getElementById('pop-title');
+const popDesc = document.getElementById('pop-desc');
+
+function showPopover(e) {
+  const key = e.target.dataset.key;
+  const def = definitions[key];
+  if(def) {
+    popTitle.textContent = def.title;
+    popDesc.textContent = def.text;
+    popover.classList.add('popover-visible');
+    movePopover(e);
+  }
+}
+
+function movePopover(e) {
+  const offset = 15;
+  let left = e.clientX + offset;
+  let top = e.clientY + offset;
+  if (left + 300 > window.innerWidth) left = e.clientX - 310;
+  if (top + 100 > window.innerHeight) top = e.clientY - 100;
+  popover.style.left = left + 'px';
+  popover.style.top = top + 'px';
+}
+
+function hidePopover() {
+  popover.classList.remove('popover-visible');
+}
+
+</script>
+</body>
+</html>
