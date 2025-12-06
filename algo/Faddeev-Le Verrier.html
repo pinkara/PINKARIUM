@@ -15,40 +15,19 @@
     <link rel="apple-touch-icon" href="https://pinkara.github.io/PINKARIUM/favicon/apple-touch-icon.png">
     <link rel="mask-icon" href="https://pinkara.github.io/PINKARIUM/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <link rel="icon" href="https://pinkara.github.io/PINKARIUM/favicon/favicon.svg" type="image/svg+xml">
-  <!-- Tailwind (utilitaires) -->
+    <!-- Tailwind (Mise en page) -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Prism pour la coloration (optionnel) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" crossorigin="anonymous" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-
+  
   <!-- Police Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Police Code -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- MathJax -->
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        processEscapes: true
-      },
-      options: {
-        skipHtmlTags: ['script','noscript','style','textarea','pre','code']
-      },
-      svg: { fontCache: 'global' },
-      startup: { typeset:false }
-    };
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
+  <!-- Prism CSS (Tokyo Night Custom) -->
   <style>
-    /* =========================
-       Palette Tokyo Night + composants partagés (aligné A*)
-       ========================= */
+    /* Reset & Base */
     :root{
       --tn-bg: #1a1b26;
       --tn-bg-2: #0f1724;
@@ -63,653 +42,478 @@
       --tn-comment: #565f89;
       --tn-border: #414868;
       --tn-storm: #24283b;
-      --glass: rgba(255,255,255,0.02);
-      --tn-imp: #ff6b6b;
+    }
+    body { background: var(--tn-bg); color: var(--tn-foreground); font-family: 'Inter', sans-serif; margin: 0; }
+    
+    /* Layout */
+    .container { max-width: 1280px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 500px; gap: 20px; }
+    @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(122,162,247,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
-    html,body{height:100%;margin:0;background:var(--tn-bg);color:var(--tn-foreground);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
-    a{color:var(--tn-cyan)}
+    /* Boutons */
+    .btn { background: var(--tn-blue); color: #000; padding: 8px 16px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn:hover { filter: brightness(1.1); }
+    .btn.secondary { background: transparent; border: 1px solid var(--tn-border); color: var(--tn-white); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .input { background: var(--tn-bg-2); border: 1px solid var(--tn-border); color: var(--tn-white); padding: 8px; border-radius: 6px; width: 80px; text-align: center; }
 
-    /* Layout container */
-    .container {
-      max-width:1240px;
-      margin: 18px auto;
-      padding: 18px;
-      display:grid;
-      grid-template-columns: 1fr 480px;
-      gap:18px;
+    /* Code Block & Prism Overrides for Tokyo Night */
+    pre[class*="language-"] {
+      background: var(--tn-bg-2) !important;
+      border: 1px solid var(--tn-border);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      text-shadow: none !important;
     }
-    @media(max-width:1100px){ .container{ grid-template-columns:1fr; } }
+    code[class*="language-"], pre[class*="language-"] { color: var(--tn-foreground) !important; }
+    
+        /*  CLASS pour le pre code python  */
+        .token.comment{color : #565f89}
+        .token.punctuation{color:#7dcfff}
+        .token.boolean{color:#7aa2f7}
+        .token.function{color:#7dcfff}
+        .token.number{color:#ff9e64}
+        .token.class-name{color:#e0af68}
+        .token.constant{color:#ff9e64}
+        .token.property{color:#7dcfff}
+        .token.symbol{color:#7dcfff}
+        .token.builtin{color:#7dcfff}
+        .token.keyword{color:#7aa2f7}
+        .token.string{color:#9ece6a}
+        .token.variable{color:#c0caf5}
+        .token.decorator{color:#bb9af7}
+        .token.parameter{color:#c0caf5}
+        .token.type{color:#e0af68}
+        .token.operator{color:#7dcfff};
 
-    /* Cards & UI */
-    .card{
-      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
-      border:1px solid rgba(122,162,247,0.04);
-      border-radius:12px;
-      padding:16px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.6);
+    /* Interactive Tokens */
+    .clickable {
+      cursor: help;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-decoration-color: rgba(122, 162, 247, 0.4);
+      transition: all 0.2s;
     }
-
-    .header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
-    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--tn-blue),var(--tn-cyan));display:flex;align-items:center;justify-content:center;color:#021;font-weight:800;font-family:monospace}
-    .title{font-size:1.25rem;font-weight:700;color:var(--tn-white)}
-
-    /* Buttons / inputs */
-    .btn{
-      background:var(--tn-blue);
-      color:var(--tn-bg);
-      padding:8px 12px;
-      border-radius:10px;
-      font-weight:700;
-      border:none;
-      cursor:pointer;
-    }
-    .btn.secondary{
-      background:transparent;
-      border:1px solid rgba(255,255,255,0.04);
-      color:var(--tn-white);
-    }
-    .btn.warn{ background:linear-gradient(90deg,var(--tn-orange),#f59e0b); color:#000; }
-
-    .btn[disabled]{ opacity:.5; cursor:not-allowed; }
-
-    .input{
-      background:var(--tn-bg-2);
-      border:1px solid rgba(255,255,255,0.04);
-      color:var(--tn-white);
-      padding:6px 8px;
-      border-radius:8px;
-      width:6rem;
-      text-align:center;
-    }
-
-    /* Code block */
-    .code-block{ background:var(--tn-bg-2); border:1px solid var(--tn-border); border-radius:10px; padding:12px; overflow:auto; color:var(--tn-white) }
-    pre[class*="language-"]{ background:transparent; color:var(--tn-white); padding:0; margin:0; font-size:14px; white-space:pre-wrap; word-break:break-word; }
-
-    /* Show tokens clickable */
-    .clickable{ cursor:help; text-decoration:underline dotted; text-underline-offset:3px; color:var(--tn-cyan) }
-    .clickable:hover{ color:var(--tn-blue); }
-
-    /* Slide / presentation area */
-    .slides { min-height:520px; display:flex; flex-direction:column; gap:12px; }
-    .slide { display:block; }
-    .slide.hidden{ display:none; }
-
-    /* Matrix display */
-    .matrix {
-      background:var(--tn-storm);
-      padding:1rem;
-      border-radius:8px;
-      display:inline-block;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono';
-      color:var(--tn-white);
+    .clickable:hover {
+      background: rgba(122, 162, 247, 0.15);
+      border-radius: 4px;
+      color: var(--tn-white) !important;
     }
 
     /* Popover */
     .popover-panel {
       position: fixed;
-      z-index: 9999;
+      z-index: 10000;
       background: var(--tn-bg);
-      border: 1px solid var(--tn-blue);
-      border-radius: .5rem;
-      padding: .75rem;
-      width: 320px;
-      color: var(--tn-foreground);
-      box-shadow: 0 10px 30px rgba(122,162,247,.08);
+      border: 1px solid var(--tn-border);
+      border-left: 3px solid var(--tn-blue);
+      border-radius: 8px;
+      padding: 12px 16px;
+      width: 300px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
       pointer-events: none;
-      transform: scale(.98);
-      transition: all .12s ease;
       opacity: 0;
-      font-size:0.95rem;
+      transform: translateY(5px);
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .popover-visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: scale(1);
-    }
-    .popover-title { color: var(--tn-blue); font-weight: 700; margin-bottom: .25rem; }
-    .popover-body { color: var(--tn-foreground); opacity: .95; }
+    .popover-visible { opacity: 1; transform: translateY(0); }
+    .popover-title { color: var(--tn-blue); font-weight: 700; margin-bottom: 4px; font-size: 0.95rem; }
+    .popover-body { color: var(--tn-foreground); font-size: 0.85rem; line-height: 1.5; }
 
-    /* code-step visuals (for the inline visible code) */
-    .code-step { display:block; transition: opacity .25s ease, transform .18s ease; opacity: .55; }
-    .code-step.active { opacity: 1; }
-    .code-step.highlight { opacity: 1; transform: scale(1.02); text-shadow: 0 0 12px rgba(122,162,247,.12); }
-
-    /* small responsive */
-    @media(max-width:700px){
-      .container{ padding:12px; gap:12px; }
+    /* Matrix Display */
+    .matrix-box {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--tn-storm);
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      color: var(--tn-white);
+      margin-top: 10px;
     }
+    
+    /* Slides Utility */
+    .slide { display: none; animation: fadeIn 0.4s ease; }
+    .slide.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
   </style>
+
+  <!-- Prism JS Core & Python -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-  <div class="container">
-    <!-- Main area (slides + code) -->
-    <div class="card">
-      <div class="header">
-        <div class="logo">FLV</div>
+
+<div class="container">
+
+  <!-- GAUCHE : Contenu Interactif -->
+  <div>
+    <div class="card mb-4">
+      <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
+        <div style="width:50px; height:50px; background:linear-gradient(135deg, var(--tn-blue), var(--tn-cyan)); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#1a1b26; font-weight:800; font-size:1.2rem;">FL</div>
         <div>
-          <div class="title">Atelier — Faddeev-LeVerrier</div>
-          <div class="small" style="color:var(--tn-comment)">Polynôme caractéristique — pas à pas interactif</div>
+          <h1 style="font-size:1.5rem; font-weight:700; color:var(--tn-white);">Faddeev-Le Verrier</h1>
+          <div style="color:var(--tn-comment); font-size:0.9rem;">Module Interactif</div>
         </div>
       </div>
-
-      <!-- Top controls -->
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="start-module" class="btn">▶ Commencer</button>
-          <button id="restart-module" class="btn secondary">Réinitialiser</button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <label style="color:var(--tn-comment)">Mode</label>
-          <select id="mode-select" class="input" style="width:auto;padding:6px;">
+      
+      <div style="display:flex; gap:10px; align-items:center; margin-bottom:20px;">
+        <button id="btn-start" class="btn">▶ Démarrer</button>
+        <button id="btn-reset" class="btn secondary">Réinitialiser</button>
+        <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+          <span style="font-size:0.85rem; color:var(--tn-comment);">Mode:</span>
+          <select id="mode-select" class="input" style="width:auto;">
             <option value="learn">Apprentissage</option>
             <option value="demo">Démonstration</option>
           </select>
-          <button id="launch-demo" class="btn secondary" title="Lancer la démonstration" style="display:inline-block">Lancer la démo</button>
         </div>
       </div>
-
-      <div class="slides">
-        <!-- Slide 0: Intro -->
-        <section id="slide-0" class="slide">
-          <h2 class="text-2xl font-bold" style="color:var(--tn-white)">Algorithme de Faddeev-LeVerrier</h2>
-          <p class="text-xl" style="margin-top:10px">Nous allons calculer les coefficients du polynôme caractéristique d'une matrice carrée via un procédé récursif élégant.</p>
-          <div style="margin-top:14px">
-            <button class="btn" data-target="slide-1">Démarrer le module</button>
+      
+      <!-- SLIDES -->
+      <div id="slides-container">
+        <!-- Slide 0 -->
+        <div id="slide-0" class="slide active">
+          <h2 style="color:var(--tn-cyan); font-weight:600; margin-bottom:10px;">Introduction</h2>
+          <p>Bienvenue. Nous allons déconstruire l'algorithme de Faddeev-Le Verrier pour une matrice $A$.</p>
+          <div class="matrix-box">
+             $$ A = \begin{pmatrix} 3 & 1 \\ 2 & 4 \end{pmatrix} $$
           </div>
-        </section>
+          <p style="margin-top:15px;">Cliquez sur <strong>Démarrer</strong> pour lancer le calcul pas à pas.</p>
+        </div>
 
-        <!-- Slide 1: Goal -->
-        <section id="slide-1" class="slide hidden">
-          <h3 class="text-2xl font-bold" style="color:var(--tn-white)">Objectif</h3>
-          <p class="text-xl" style="margin-top:10px">Pour $n\times n$ :</p>
-          <div class="matrix" style="margin-top:12px">
-            $$P(\lambda) = \lambda^n - c_1 \lambda^{n-1} - c_2 \lambda^{n-2} - \dots - c_n$$
+        <!-- Slide 1 -->
+        <div id="slide-1" class="slide">
+          <h2 style="color:var(--tn-blue); font-weight:600; margin-bottom:10px;">Étape 1 : Trace et M1</h2>
+          <p>Le premier coefficient $c_1$ est simplement la trace de $A$.</p>
+          <p>$$ c_1 = \text{tr}(A) $$</p>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:15px;">
+            <label>c1 = </label>
+            <input type="number" id="inp-c1" class="input" placeholder="?">
+            <button id="check-c1" class="btn secondary">Vérifier</button>
+            <span id="feedback-c1"></span>
           </div>
-          <p class="text-xl" style="margin-top:12px">Trouver $c_1,\dots,c_n$ avec l'algorithme.</p>
-          <div style="margin-top:14px">
-            <button class="btn" data-target="slide-2" data-code-step="1">Voir la recette</button>
+        </div>
+
+        <!-- Slide 2 -->
+        <div id="slide-2" class="slide">
+          <h2 style="color:var(--tn-magenta); font-weight:600; margin-bottom:10px;">Étape 2 : Matrice Auxiliaire M2</h2>
+          <p>On calcule la matrice auxiliaire suivante :</p>
+          <p>$$ M_2 = A(M_1 - c_1 I) $$</p>
+          <div id="m2-container" class="matrix-box" style="display:none; margin-bottom:15px;"></div>
+          <p>Puis le coefficient $c_2$ :</p>
+          <p>$$ c_2 = \frac{1}{2} \text{tr}(M_2) $$</p>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:15px;">
+            <label>c2 = </label>
+            <input type="number" id="inp-c2" class="input" placeholder="?">
+            <button id="check-c2" class="btn secondary">Vérifier</button>
+            <span id="feedback-c2"></span>
           </div>
-        </section>
+        </div>
 
-        <!-- Slide 2: Recipe -->
-        <section id="slide-2" class="slide hidden">
-          <h3 class="text-2xl font-bold" style="color:var(--tn-white)">La recette</h3>
-          <div style="margin-top:12px" class="card">
-            <p class="text-xl font-mono text-cyan">1. $c_k = \dfrac{1}{k}\operatorname{tr}(M_k)$</p>
-            <p class="text-xl font-mono text-green" style="margin-top:8px">2. $M_{k+1} = A (M_k - c_k I)$</p>
+        <!-- Slide 3 -->
+        <div id="slide-3" class="slide">
+          <h2 style="color:var(--tn-green); font-weight:600; margin-bottom:10px;">Résultat Final</h2>
+          <p>Le polynôme caractéristique est :</p>
+          <div class="matrix-box" id="poly-res">
+            $$ P(\lambda) = \lambda^2 - 7\lambda + 10 $$
           </div>
-
-          <div style="margin-top:12px">
-            <button class="btn" data-target="slide-3" data-code-step="2">Exemple interactif (n=2)</button>
-          </div>
-        </section>
-
-        <!-- Slide 3: Interactive example -->
-        <section id="slide-3" class="slide hidden">
-          <h3 class="text-2xl font-bold" style="color:var(--tn-white)">Exemple interactif — matrice $2\times2$</h3>
-          <p class="text-xl" style="margin-top:8px">Considérons :</p>
-          <div class="matrix" style="margin-top:10px">
-            $$A=\begin{bmatrix}3 & 1 \\ 2 & 4\end{bmatrix}$$
-          </div>
-
-          <!-- Step k=1 -->
-          <div class="card" style="margin-top:12px">
-            <h4 class="font-bold text-blue">Étape $k=1$</h4>
-            <p class="text-lg" style="margin-top:6px">Calculer $c_1 = \operatorname{tr}(M_1)$ où $M_1 = A$.</p>
-            <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-              <label class="font-mono">c1 =</label>
-              <input id="c1-input" type="number" class="input" placeholder="?" />
-              <button id="c1-check" class="btn">Vérifier</button>
-              <div id="c1-feedback" style="min-width:180px"></div>
-            </div>
-          </div>
-
-          <!-- Step k=2 -->
-          <div class="card" id="k2-block" style="margin-top:12px;display:none">
-            <h4 class="font-bold text-blue">Étape $k=2$</h4>
-            <p class="text-lg" style="margin-top:6px">Nous formons $M_2 = A(M_1 - c_1 I)$ puis $c_2 = \dfrac{1}{2}\operatorname{tr}(M_2)$.</p>
-            <div style="margin-top:8px">
-              <div class="matrix" id="M2-display">
-                <!-- M2 rendered here -->
-              </div>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-              <label class="font-mono">c2 =</label>
-              <input id="c2-input" type="number" class="input" placeholder="?" />
-              <button id="c2-check" class="btn">Vérifier</button>
-              <div id="c2-feedback" style="min-width:180px"></div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px;display:flex;gap:8px">
-            <button class="btn" id="show-result" disabled>Voir le polynôme</button>
-            <button class="btn secondary" id="back-to-recipe">Retour</button>
-          </div>
-        </section>
-
-        <!-- Slide 4: Result -->
-        <section id="slide-4" class="slide hidden">
-          <h3 class="text-2xl font-bold" style="color:var(--tn-white)">Résultat</h3>
-          <div style="margin-top:12px" class="card">
-            <p class="text-xl">Coefficients trouvés :</p>
-            <ul style="margin-top:10px">
-              <li class="text-green">c1 = <span id="final-c1">—</span></li>
-              <li class="text-green">c2 = <span id="final-c2">—</span></li>
-            </ul>
-            <p style="margin-top:12px" class="text-xl font-mono text-cyan" id="final-polynomial">P(λ) = —</p>
-          </div>
-          <div style="margin-top:12px">
-            <button class="btn" id="restart-after-result">Recommencer</button>
-            <button class="btn secondary" id="to-slide-0">Retour accueil</button>
-          </div>
-        </section>
-      </div>
-
-      <!-- Right: Code block showing algorithm (kept visible) -->
-      <div style="margin-top:16px" class="code-block card">
-        <div class="title text-lg font-bold mb-2" style="color:var(--tn-blue)">Code Python — Faddeev-LeVerrier</div>
-        <pre><code id="python-code" class="language-python">
-import numpy as np
-
-def faddeev_leverrier(A):
-    n = A.shape[0]
-    I = np.eye(n)
-    coefficients = []
-
-    # M1 = A
-    M = np.copy(A)
-
-    for k in range(1, n+1):
-        # c_k = (1/k) * tr(M)
-        c_k = (1.0 / k) * np.trace(M)
-        coefficients.append(c_k)
-
-        # Prepare M_{k+1} = A (M_k - c_k I) for next iteration
-        if k &lt; n:
-            M = np.dot(A, (M - c_k * I))
-
-    return coefficients
-
-# Exemple
-A_example = np.array([[3,1],[2,4]])
-coeffs = faddeev_leverrier(A_example)
-print("Coefficients:", coeffs)
-        </code></pre>
+          <p style="margin-top:10px;">Les valeurs propres sont les racines de ce polynôme (2 et 5).</p>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Sidebar: definitions, status, popover -->
-    <aside class="card">
-      <h4 class="font-bold" style="color:var(--tn-white)">Définitions & Aide</h4>
-      <div style="margin-top:8px">
-        <div style="margin-bottom:8px"><strong>Trace</strong> : somme des éléments diagonaux d'une matrice.</div>
-        <div style="margin-bottom:8px"><strong>Matrice identité (I)</strong> : éléments diagonaux = 1, autres = 0.</div>
-        <div style="margin-bottom:8px"><strong>M_k</strong> : matrice auxiliaire du pas k.</div>
+  <!-- DROITE : Code Python Interactif -->
+  <div>
+    <div class="card" style="position:sticky; top:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h3 style="color:var(--tn-white); font-weight:600;">Code Python</h3>
+        <span style="font-size:0.75rem; color:var(--tn-comment);">Survolez les mots-clés</span>
       </div>
+      
+      <!-- Code avec ID pour Prism -->
+      <pre class="line-numbers"><code id="python-code" class="language-python">import numpy as np
 
-      <div style="margin-top:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><strong>État</strong></div>
-          <div id="module-status" style="color:var(--tn-comment)">Idle</div>
+def faddeev_le_verrier(A):
+    """
+    Calcule le polynôme caractéristique
+    et l'inverse de A.
+    """
+    n = A.shape[0]
+    I = np.eye(n)
+    
+    # Initialisation
+    M = np.zeros((n, n))
+    c = np.zeros(n + 1)
+    
+    # c_0 = 1 (coeff dominant)
+    c[0] = 1
+    B = np.zeros((n, n)) 
+
+    for k in range(1, n + 1):
+        # Étape matricielle
+        if k == 1:
+            M = A
+        else:
+            M = A @ (B + c[k-1] * I)
+        
+        B = M # Sauvegarde
+        
+        # Calcul du coeff via la Trace
+        trace_val = np.trace(M)
+        c[k] = - (1/k) * trace_val
+        
+    # Calcul de l'inverse
+    invA = None
+    if abs(c[n]) > 1e-10:
+        invA = - (1/c[n]) * (M + c[n-1]*I)
+
+    return c, invA
+</code></pre>
+      
+      <div class="card" style="margin-top:15px; border:1px dashed var(--tn-comment); background:transparent;">
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+          <span style="color:var(--tn-comment);">Status:</span>
+          <span id="status-text" style="color:var(--tn-cyan);">Prêt</span>
         </div>
       </div>
-
-      <div style="margin-top:12px">
-        <div class="title" style="color:var(--tn-blue);font-weight:700;margin-bottom:8px">Popover</div>
-        <div style="color:var(--tn-foreground)">Passe la souris sur un mot du code (ex: <span class="font-mono">trace</span>) pour voir la définition. Les tokens sont surlignés et interactifs.</div>
-      </div>
-
-      <hr style="margin:12px 0;border-color: rgba(255,255,255,0.02)">
-
-      <div style="font-size:0.95rem;color:var(--tn-comment)">
-        <strong>Mode</strong> = <span id="mode-indicator">Apprentissage</span><br>
-        - <em>Apprentissage</em> : tu remplis les réponses.<br>
-        - <em>Démonstration</em> : la démo s'exécute automatiquement.
-      </div>
-    </aside>
+    </div>
   </div>
 
-  <!-- Popover (shared) -->
-  <div id="popover-panel" class="popover-panel" aria-hidden="true">
-    <div class="popover-title" id="popover-title">Définition</div>
-    <div class="popover-body" id="popover-content">Contenu</div>
-  </div>
+</div>
 
-  <script>
-    /****************************************************************
-     * Améliorations :
-     * - Transformation automatique du code en tokens "clickable" (hover)
-     * - Popover fonctionnel (suit la souris)
-     * - Modes "learn" vs "demo" avec comportement distinct
-     ****************************************************************/
+<!-- POPOVER (Caché par défaut) -->
+<div id="popover" class="popover-panel">
+  <div id="pop-title" class="popover-title">Titre</div>
+  <div id="pop-desc" class="popover-body">Description...</div>
+</div>
 
-    // Définitions disponibles pour le popover (ajoute/édite ici)
-    const codeDefinitions = {
-      'import': { title:'import', text:'Importe un module (bibliothèque) en Python.' },
-      'numpy': { title:'numpy', text:'Bibliothèque pour calcul scientifique : arrays, opérations matricielles.' },
-      'np': { title:'np', text:'Alias usuel pour numpy. Exemple : np.array, np.dot.' },
-      'def': { title:'def', text:'Déclare une fonction en Python.' },
-      'trace': { title:'np.trace', text:'Calcule la trace d\'une matrice : somme des éléments diagonaux.' },
-      'dot': { title:'np.dot', text:'Produit matriciel entre deux matrices.' },
-      'eye': { title:'np.eye', text:'Crée une matrice identité (1 sur la diagonale, 0 ailleurs).' },
-      'copy': { title:'np.copy', text:'Retourne une copie indépendante d\'un array, évite l\'aliasing.' },
-      'append': { title:'append', text:'Ajoute un élément à une liste Python.' },
-      'return': { title:'return', text:'Renvoie une valeur depuis une fonction.' },
-      'for': { title:'for', text:'Boucle en Python pour itérer sur une séquence.' },
-      'range': { title:'range', text:'Génère une suite d\'entiers en Python.' },
-      'print': { title:'print', text:'Affiche du texte ou des valeurs dans la console.' }
-    };
+<script>
+// ============================================
+// 1. DICTIONNAIRE COMPLET (POPOVERS)
+// ============================================
+const definitions = {
+  // Python Core
+  'import': { title:'import', text:'Importe un module externe pour utiliser ses fonctions.' },
+  'def': { title:'def', text:'Déclare une nouvelle fonction.' },
+  'return': { title:'return', text:'Renvoie le résultat de la fonction et termine son exécution.' },
+  'for': { title:'for', text:'Boucle qui itère sur une séquence (comme range ou une liste).' },
+  'in': { title:'in', text:'Opérateur d\'appartenance ou d\'itération dans une boucle.' },
+  'if': { title:'if', text:'Conditionnelle : exécute le bloc si la condition est vraie.' },
+  'else': { title:'else', text:'Alternative : s\'exécute si le "if" précédent est faux.' },
+  'range': { title:'range', text:'Génère une séquence de nombres entiers.' },
+  'abs': { title:'abs', text:'Renvoie la valeur absolue (positive) d\'un nombre.' },
+  'print': { title:'print', text:'Affiche des informations dans la console.' },
+  'as' : { title:'as' , text: 'Créer un alias (nom raccourci) pour un module importé'},
+  
+  // NumPy (Algèbre Linéaire)
+  'numpy': { title:'numpy', text:'Bibliothèque standard pour le calcul scientifique en Python.' },
+  'np': { title:'np', text:'Alias conventionnel pour numpy.' },
+  'array': { title:'np.array', text:'Crée un tableau multidimensionnel (vecteur/matrice).' },
+  'zeros': { title:'np.zeros', text:'Crée une matrice remplie de zéros.' },
+  'eye': { title:'np.eye', text:'Crée une matrice identité (1 sur la diagonale, 0 ailleurs).' },
+  'shape': { title:'shape', text:'Attribut donnant les dimensions (lignes, colonnes) de la matrice.' },
+  'trace': { title:'np.trace', text:'Somme des éléments diagonaux. Cœur de l\'algorithme de Faddeev.' },
+  'dot': { title:'np.dot', text:'Produit matriciel (ou utiliser @ en Python récent).' },
+  'inv': { title:'np.linalg.inv', text:'Calcule l\'inverse d\'une matrice.' },
+  
+  // Variables Spécifiques
+  'faddeev_le_verrier': { title:'Algorithme', text:'Méthode récursive pour polynôme caractéristique et inverse.' },
+  'A': { title:'Matrice A', text:'La matrice d\'entrée dont on cherche les propriétés.' },
+  'M': { title:'Matrice M', text:'Matrice auxiliaire calculée à chaque étape k.' },
+  'c': { title:'Vecteur c', text:'Stocke les coefficients du polynôme caractéristique.' },
+  'I': { title:'Matrice I', text:'Matrice identité de même taille que A.' },
+  'n': { title:'Dimension n', text:'La taille de la matrice carrée (n x n).' }
+};
 
-    // Helper DOM
-    function $(sel){ return document.querySelector(sel); }
-    function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+// ============================================
+// 2. ENRICHISSEMENT PRISM + POPOVERS
+// ============================================
+window.addEventListener('load', () => {
+  // ASTUCE PRO : On injecte nos clés définies directement dans la grammaire de Prism 
+  // pour forcer leur détection, même si Prism les ignore par défaut (comme 'shape' ou 'A').
+  
+  const customKeys = Object.keys(definitions).map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  
+  // On insère notre règle 'custom-highlight' AVANT les règles standards pour qu'elle soit prioritaire
+  Prism.languages.python['custom-highlight'] = {
+    pattern: new RegExp(`\\b(${customKeys})\\b`),
+    alias: 'custom-highlight'
+  };
 
-    // Utility: escape HTML
-    function escapeHtml(str){
-      return str.replace(/&/g, '&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Maintenant on lance la coloration
+  Prism.highlightAll();
+  
+  // Une fois le HTML généré par Prism, on attache nos événements
+  // Prism utilise requestAnimationFrame, donc on attend un tick ou on le fait immédiatement si synchrone
+  setTimeout(attachPopovers, 100);
+});
+
+function attachPopovers() {
+  const codeBlock = document.getElementById('python-code');
+  
+  // On cible TOUS les tokens générés par Prism, y compris notre 'custom-highlight'
+  const tokens = codeBlock.querySelectorAll('.token');
+  
+  tokens.forEach(token => {
+    const text = token.textContent.trim();
+    let key = text;
+    if (!definitions[key] && definitions[key.toLowerCase()]) key = key.toLowerCase();
+    
+    if (definitions[key]) {
+      token.classList.add('clickable');
+      token.dataset.key = key;
+      
+      token.addEventListener('mouseenter', showPopover);
+      token.addEventListener('mousemove', movePopover);
+      token.addEventListener('mouseleave', hidePopover);
     }
+  });
+}
 
-    // Wrap tokens in the code block with <span class="clickable" data-term="...">
-    function markupCodeTokens(){
-      const codeEl = document.getElementById('python-code');
-      if(!codeEl) return;
-      // get raw text (no HTML)
-      const raw = codeEl.textContent || '';
-      // list tokens to wrap (from keys of codeDefinitions)
-      const tokens = Object.keys(codeDefinitions).sort((a,b)=>b.length - a.length); // longest first
-      // Escape HTML and then replace tokens with span
-      // We'll preserve whitespace and newlines by splitting and rebuilding
-      let escaped = escapeHtml(raw);
-      // Replace token occurrences with marker spans — use word boundaries \b for safe matching
-      for(const tk of tokens){
-        // build regex with word boundaries; for tokens containing dots (np.trace) allow dot-less matches too
-        const safeTk = tk.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-        const re = new RegExp('\\b' + safeTk + '\\b', 'g');
-        escaped = escaped.replace(re, `<span class="clickable" data-term="${tk}">${safeTk}</span>`);
-      }
-      // Now replace multiple spaces with &nbsp; to preserve indentation visually
-      escaped = escaped.replace(/ {2}/g, '&nbsp;&nbsp;').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
-      // keep newlines
-      escaped = escaped.replace(/\n/g, '<br>');
-      codeEl.innerHTML = escaped;
-      // Allow Prism to re-run highlighting if you want — but since we replaced with our spans, Prism won't re-apply.
-      // Our spans are styled with .clickable for hover; this is acceptable.
-    }
+// Logique Popover
+const popover = document.getElementById('popover');
+const popTitle = document.getElementById('pop-title');
+const popDesc = document.getElementById('pop-desc');
 
-    // Popover behavior
-    function initPopover(){
-      const pop = $('#popover-panel');
-      let showTimer = null;
-      document.addEventListener('mousemove', (e) => {
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-        if(!el) { hidePopover(); return; }
-        const token = el.closest && el.closest('.clickable') ? (el.closest('.clickable')) : (el.classList && el.classList.contains('clickable') ? el : null);
-        if(token && token.dataset && token.dataset.term){
-          const term = token.dataset.term;
-          const def = codeDefinitions[term] || { title: term, text: 'Définition indisponible.' };
-          $('#popover-title').textContent = def.title;
-          $('#popover-content').textContent = def.text;
-          // position with offset and keep inside viewport
-          const offsetX = 14, offsetY = 12;
-          let left = e.clientX + offsetX;
-          let top = e.clientY + offsetY;
-          const maxLeft = window.innerWidth - pop.offsetWidth - 10;
-          const maxTop = window.innerHeight - pop.offsetHeight - 10;
-          if(left > maxLeft) left = Math.max(10, e.clientX - pop.offsetWidth - 20);
-          if(top > maxTop) top = Math.max(10, e.clientY - pop.offsetHeight - 20);
-          pop.style.left = left + 'px';
-          pop.style.top = top + 'px';
-          pop.classList.add('popover-visible');
-        } else {
-          hidePopover();
-        }
-      });
-      function hidePopover(){
-        if(pop) pop.classList.remove('popover-visible');
-      }
-    }
+function showPopover(e) {
+  const key = e.target.dataset.key;
+  const def = definitions[key];
+  if(def) {
+    popTitle.textContent = def.title;
+    popDesc.textContent = def.text;
+    popover.classList.add('popover-visible');
+    movePopover(e);
+  }
+}
 
-    /********************
-     * Interactive logic
-     ********************/
-    // Example matrix A (n=2)
-    const A = [[3,1],[2,4]];
+function movePopover(e) {
+  const offset = 15;
+  let left = e.clientX + offset;
+  let top = e.clientY + offset;
+  
+  if (left + 300 > window.innerWidth) left = e.clientX - 310;
+  if (top + 100 > window.innerHeight) top = e.clientY - 100;
+  
+  popover.style.left = left + 'px';
+  popover.style.top = top + 'px';
+}
 
-    function matrixTrace(M){ let s=0; for(let i=0;i<M.length;i++) s+=M[i][i]; return s; }
-    function matrixSubtract(M,c){ const n=M.length; const R=[]; for(let i=0;i<n;i++){ R.push([]); for(let j=0;j<n;j++){ R[i].push(M[i][j] - (i===j?c:0)); }} return R; }
-    function matrixDot(X,Y){ const n=X.length, m=Y[0].length; const Z=Array.from({length:n},()=>Array(m).fill(0)); for(let i=0;i<n;i++){ for(let k=0;k<X[0].length;k++){ for(let j=0;j<m;j++){ Z[i][j] += X[i][k]*Y[k][j]; }}} return Z; }
-    function renderMatrixLaTeX(M){ const rows = M.map(r=>r.map(v=> (Number.isFinite(v)?v:v.toString())).join(' & ')).join(' \\\\ '); return '\\[ \\begin{bmatrix} ' + rows + ' \\end{bmatrix} \\]'; }
+function hidePopover() {
+  popover.classList.remove('popover-visible');
+}
 
-    // DOM helpers
-    function setText(sel, txt){ const el = $(sel); if(el) el.textContent = txt; }
 
-    // state
-    let currentMode = 'learn'; // 'learn' | 'demo'
-    let demoTimer = null;
-    let demoRunning = false;
+// ============================================
+// 3. LOGIQUE INTERACTIVE (SLIDES)
+// ============================================
+// Données de l'exercice (A = [[3,1], [2,4]])
+// Trace = 7, Det = 10. Poly = x^2 - 7x + 10.
+const data = {
+  c1: 7,
+  c2: 10,
+  M2: [[10, 0], [0, 10]] // Approximatif pour l'affichage (M2 = det * I dans le cas 2x2 final)
+};
 
-    // init
-    document.addEventListener('DOMContentLoaded', () => {
-      markupCodeTokens();    // wrap tokens in code block
-      initPopover();         // popover follow cursor
-      MathJax.typesetPromise && MathJax.typesetPromise();
-      attachHandlers();
-      updateModeIndicator();
-    });
+// Navigation Slides
+const slides = document.querySelectorAll('.slide');
+function goToSlide(n) {
+  slides.forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('slide-'+n);
+  if(target) target.classList.add('active');
+  document.getElementById('status-text').textContent = "Étape " + n + "/3";
+}
 
-    // Attach buttons and inputs
-    function attachHandlers(){
-      // slide navigation via data-target
-      $all('button[data-target]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const t = btn.getAttribute('data-target');
-          showSlide('slide-' + t.split('-').pop());
-        });
-      });
+// Handlers Boutons
+document.getElementById('btn-start').onclick = () => goToSlide(1);
+document.getElementById('btn-reset').onclick = () => {
+  document.getElementById('inp-c1').value = "";
+  document.getElementById('inp-c2').value = "";
+  document.getElementById('feedback-c1').textContent = "";
+  document.getElementById('feedback-c2').textContent = "";
+  document.getElementById('m2-container').style.display = "none";
+  goToSlide(0);
+};
 
-      $('#start-module').addEventListener('click', ()=> showSlide('slide-1'));
-      $('#restart-module').addEventListener('click', ()=> { resetModule(); showSlide('slide-0'); });
-      $('#back-to-recipe').addEventListener('click', ()=> showSlide('slide-2'));
-      $('#to-slide-0').addEventListener('click', ()=> showSlide('slide-0'));
-      $('#restart-after-result').addEventListener('click', ()=> { resetModule(); showSlide('slide-1'); });
+// Validation C1
+document.getElementById('check-c1').onclick = () => {
+  const val = parseFloat(document.getElementById('inp-c1').value);
+  const fb = document.getElementById('feedback-c1');
+  if(val === data.c1) {
+    fb.innerHTML = "<span style='color:var(--tn-green)'>Correct ! (3+4=7)</span>";
+    setTimeout(() => goToSlide(2), 1000);
+  } else {
+    fb.innerHTML = "<span style='color:var(--tn-red)'>Incorrect. Trace = 3+4</span>";
+  }
+};
 
-      $('#c1-check').addEventListener('click', onC1Check);
-      $('#c2-check').addEventListener('click', onC2Check);
-      $('#show-result').addEventListener('click', onShowResult);
+// Validation C2
+document.getElementById('check-c2').onclick = () => {
+  const val = parseFloat(document.getElementById('inp-c2').value);
+  const fb = document.getElementById('feedback-c2');
+  // Afficher M2 d'abord si pas fait
+  const m2cont = document.getElementById('m2-container');
+  m2cont.style.display = "block";
+  m2cont.innerHTML = "$$ M_2 = \\begin{pmatrix} 10 & 0 \\\\ 0 & 10 \\end{pmatrix} $$";
+  MathJax.typesetPromise();
+  
+  if(val === 5) { // Erreur commune (trace/2)
+     if(val === 10) {
+        fb.innerHTML = "<span style='color:var(--tn-green)'>Correct ! (Trace(M2)/2 = 20/2 = 10)</span>";
+        setTimeout(() => goToSlide(3), 1000);
+     } else if (val === 20) {
+        fb.innerHTML = "<span style='color:var(--tn-orange)'>Presque. N'oublie pas de diviser par k=2.</span>";
+     } else {
+        fb.innerHTML = "<span style='color:var(--tn-red)'>Incorrect. Trace(M2) / 2</span>";
+     }
+  } else if (val === 10) {
+     fb.innerHTML = "<span style='color:var(--tn-green)'>Correct ! (20/2 = 10)</span>";
+     setTimeout(() => goToSlide(3), 1000);
+  } else {
+     fb.innerHTML = "<span style='color:var(--tn-red)'>Incorrect. Regardez la matrice M2.</span>";
+  }
+};
 
-      $('#mode-select').addEventListener('change', (e)=>{
-        currentMode = e.target.value;
-        updateModeIndicator();
-        resetModule(); // reset to avoid inconsistencies
-      });
+// Mode Démo Automatique
+document.getElementById('mode-select').onchange = (e) => {
+  if(e.target.value === 'demo') {
+    runDemo();
+  }
+};
 
-      $('#launch-demo').addEventListener('click', ()=>{
-        if(currentMode !== 'demo'){ currentMode = 'demo'; $('#mode-select').value = 'demo'; updateModeIndicator(); }
-        // ensure we are on the interactive slide
-        showSlide('slide-3');
-        startDemoSequence();
-      });
-    }
+function runDemo() {
+  goToSlide(1);
+  setTimeout(() => {
+    document.getElementById('inp-c1').value = 7;
+    document.getElementById('check-c1').click();
+  }, 1000);
+  setTimeout(() => {
+    document.getElementById('inp-c2').value = 10;
+    document.getElementById('check-c2').click();
+  }, 3500);
+}
 
-    function updateModeIndicator(){
-      setText('#mode-indicator', currentMode === 'demo' ? 'Démonstration' : 'Apprentissage');
-      // toggle UI availability
-      const isDemo = currentMode === 'demo';
-      $('#c1-input').disabled = isDemo;
-      $('#c2-input').disabled = isDemo;
-      $('#c1-check').disabled = isDemo;
-      $('#c2-check').disabled = isDemo;
-      $('#launch-demo').style.display = isDemo ? 'inline-block' : 'inline-block';
-    }
-
-    // Slide show
-    function showSlide(id){
-      $all('.slide').forEach(el => el.classList.add('hidden'));
-      const el = document.getElementById(id);
-      if(el) el.classList.remove('hidden');
-      // update status
-      setText('#module-status', id === 'slide-0' ? 'Idle' : 'En cours');
-      MathJax.typesetPromise && MathJax.typesetPromise();
-      // If entering interactive slide and mode is demo, auto run demo
-      if(id === 'slide-3' && currentMode === 'demo'){
-        startDemoSequence();
-      } else {
-        // if switching to learn, stop demo
-        stopDemoSequence();
-      }
-    }
-
-    // Reset module to initial state
-    function resetModule(){
-      $('#c1-input').value = '';
-      $('#c2-input').value = '';
-      $('#c1-feedback').textContent = '';
-      $('#c2-feedback').textContent = '';
-      $('#M2-display').innerHTML = '';
-      $('#k2-block').style.display = 'none';
-      $('#show-result').disabled = true;
-      window._example_M2 = null;
-      window._finals = null;
-      setText('#final-c1','—'); setText('#final-c2','—'); setText('#final-polynomial','P(λ) = —');
-      setText('#module-status','Idle');
-      stopDemoSequence();
-    }
-
-    // c1 check handler (learn mode)
-    function onC1Check(){
-      if(currentMode === 'demo') return;
-      const v = Number($('#c1-input').value);
-      const trueC1 = matrixTrace(A); // 7
-      if(Number.isNaN(v)){
-        $('#c1-feedback').textContent = 'Entrée invalide'; $('#c1-feedback').style.color = 'var(--tn-yellow)'; return;
-      }
-      if(Math.abs(v - trueC1) < 1e-9){
-        $('#c1-feedback').textContent = 'Correct ✅'; $('#c1-feedback').style.color = 'var(--tn-green)';
-        // reveal M2
-        const M1 = A;
-        const M2 = matrixDot(A, matrixSubtract(M1, trueC1));
-        $('#M2-display').innerHTML = '$$M_2 = A(M_1 - c_1 I) = $$' + renderMatrixLaTeX(M2);
-        MathJax.typesetPromise && MathJax.typesetPromise();
-        $('#k2-block').style.display = 'block';
-        window._example_M2 = M2;
-      } else {
-        $('#c1-feedback').textContent = 'Incorrect — réessaie'; $('#c1-feedback').style.color = 'var(--tn-imp)';
-      }
-    }
-
-    // c2 check handler (learn mode)
-    function onC2Check(){
-      if(currentMode === 'demo') return;
-      const v = Number($('#c2-input').value);
-      const M2 = window._example_M2;
-      if(!M2){ $('#c2-feedback').textContent = 'Calcule d\'abord c1.'; $('#c2-feedback').style.color = 'var(--tn-yellow)'; return; }
-      const trueC2 = 0.5 * matrixTrace(M2);
-      if(Number.isNaN(v)){
-        $('#c2-feedback').textContent = 'Entrée invalide'; $('#c2-feedback').style.color = 'var(--tn-yellow)'; return;
-      }
-      if(Math.abs(v - trueC2) < 1e-9){
-        $('#c2-feedback').textContent = 'Correct ✅'; $('#c2-feedback').style.color = 'var(--tn-green)';
-        $('#show-result').disabled = false;
-        window._finals = { c1: Number($('#c1-input').value), c2: trueC2 };
-      } else {
-        $('#c2-feedback').textContent = 'Incorrect — réessaie'; $('#c2-feedback').style.color = 'var(--tn-imp)';
-      }
-    }
-
-    function onShowResult(){
-      const f = window._finals || {};
-      const c1 = ('c1' in f) ? f.c1 : Number($('#c1-input').value);
-      const c2 = ('c2' in f) ? f.c2 : Number($('#c2-input').value);
-      setText('#final-c1', c1);
-      setText('#final-c2', c2);
-      const poly = `P(\\lambda)=\\lambda^2 - ${c1}\\lambda - (${c2}) = \\lambda^2 - ${c1}\\lambda ${ (c2<0) ? '+' + Math.abs(c2) : '-' + c2 }`;
-      $('#final-polynomial').innerHTML = '$$' + poly + '$$';
-      MathJax.typesetPromise && MathJax.typesetPromise();
-      showSlide('slide-4');
-    }
-
-    /****************
-     * DEMO Sequence
-     ****************/
-    function startDemoSequence(){
-      if(demoRunning) return;
-      demoRunning = true;
-      resetModule(); // start clean
-      setText('#module-status','Demo running');
-      // steps with timings
-      const trueC1 = matrixTrace(A); // 7
-      const M1 = A;
-      const M2 = matrixDot(A, matrixSubtract(M1, trueC1));
-      const trueC2 = 0.5 * matrixTrace(M2);
-
-      // Step timings (ms)
-      const t1 = 600, t2 = 900, t3 = 900, t4 = 700;
-
-      // 1) Fill c1
-      demoTimer = setTimeout(()=> {
-        $('#c1-input').value = trueC1;
-        $('#c1-feedback').textContent = '✅ calcul automatique (demo)';
-        $('#c1-feedback').style.color = 'var(--tn-green)';
-      }, t1);
-
-      // 2) show M2
-      demoTimer = setTimeout(()=> {
-        $('#M2-display').innerHTML = '$$M_2 = A(M_1 - c_1 I) = $$' + renderMatrixLaTeX(M2);
-        MathJax.typesetPromise && MathJax.typesetPromise();
-        $('#k2-block').style.display = 'block';
-      }, t1 + t2);
-
-      // 3) fill c2
-      demoTimer = setTimeout(()=> {
-        $('#c2-input').value = trueC2;
-        $('#c2-feedback').textContent = '✅ calcul automatique (demo)';
-        $('#c2-feedback').style.color = 'var(--tn-green)';
-        $('#show-result').disabled = false;
-        window._example_M2 = M2;
-        window._finals = { c1: trueC1, c2: trueC2 };
-      }, t1 + t2 + t3);
-
-      // 4) show result slide
-      demoTimer = setTimeout(()=> {
-        onShowResult();
-        demoRunning = false;
-      }, t1 + t2 + t3 + t4);
-    }
-
-    function stopDemoSequence(){
-      if(demoTimer) { clearTimeout(demoTimer); demoTimer = null; }
-      demoRunning = false;
-      // leave UI as-is (do not reset)
-    }
-
-    // small keyboard helpers
-    $('#c1-input')?.addEventListener('keydown', (ev)=> { if(ev.key === 'Enter') { ev.preventDefault(); $('#c1-check').click(); } });
-    $('#c2-input')?.addEventListener('keydown', (ev)=> { if(ev.key === 'Enter') { ev.preventDefault(); $('#c2-check').click(); } });
-
-    // ensure popover tokens are interactive also when clicking them (focus)
-    document.addEventListener('click', (e)=>{
-      const t = e.target.closest && e.target.closest('.clickable');
-      if(t && t.dataset && t.dataset.term){
-        const term = t.dataset.term;
-        const def = codeDefinitions[term] || { title:term, text:'Définition indisponible.' };
-        // show popover near clicked element briefly
-        const pop = $('#popover-panel');
-        $('#popover-title').textContent = def.title; $('#popover-content').textContent = def.text;
-        const rect = t.getBoundingClientRect();
-        let left = rect.right + 8;
-        let top = rect.top + window.scrollY;
-        pop.style.left = left + 'px';
-        pop.style.top = (top) + 'px';
-        pop.classList.add('popover-visible');
-        setTimeout(()=> pop.classList.remove('popover-visible'), 4200);
-      }
-    });
-
-    // Defensive: when resizing, hide popover to avoid misplacement
-    window.addEventListener('resize', ()=> { $('#popover-panel')?.classList.remove('popover-visible'); });
-
-  </script>
+</script>
 </body>
 </html>
