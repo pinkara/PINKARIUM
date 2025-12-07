@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Atelier Lenia - PINKARIUM</title>
+ <!-- Favicon -->
+    <link rel="icon" href="https://pinkara.github.io/PINKARIUM/favicon/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/favicon-48x48.png" sizes="48x48">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="https://pinkara.github.io/PINKARIUM/favicon/android-chrome-512x512.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="https://pinkara.github.io/PINKARIUM/favicon/apple-touch-icon.png">
+    <link rel="mask-icon" href="https://pinkara.github.io/PINKARIUM/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="icon" href="https://pinkara.github.io/PINKARIUM/favicon/favicon.svg" type="image/svg+xml">  
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- MathJax -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!-- Prism & Fonts -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   Tokyo Night Theme
+   ========================= */
+:root {
+  --tn-bg: #1a1b26;
+  --tn-bg-2: #24283b;
+  --tn-fg: #c0caf5;
+  --tn-accent: #7aa2f7;
+  --tn-cyan: #7dcfff;
+  --tn-green: #9ece6a;
+  --tn-orange: #ff9e64;
+  --tn-magenta: #bb9af7;
+  --tn-red: #f7768e;
+  --tn-border: #414868;
+  --tn-comment: #565f89;
+}
+
+body {
+  background-color: var(--tn-bg);
+  color: var(--tn-fg);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-container { display: flex; width: 100%; height: 100%; }
+
+/* Canvas Area */
+.canvas-area {
+  flex: 1;
+  position: relative;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-right: 1px solid var(--tn-border);
+}
+canvas {
+  /* The secret for crisp pixel art look */
+  image-rendering: pixelated; 
+  width: 100%; 
+  height: 100%; 
+  display: block;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 400px;
+  background: var(--tn-bg-2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.3);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+/* UI Components */
+.header-box {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--tn-border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+}
+.header-title-row { display: flex; align-items: center; gap: 12px; }
+.header-icon {
+  min-width: 36px; width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--tn-green), var(--tn-cyan));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: #1a1b26; font-weight: 800; font-family: 'JetBrains Mono', monospace; font-size: 1rem;
+}
+h1 { color: var(--tn-fg); font-weight: 800; font-size: 1.2rem; margin: 0; }
+.subtitle { color: var(--tn-accent); font-size: 0.75rem; font-weight: 500; opacity: 0.9; }
+
+.tabs { display: flex; background: rgba(0,0,0,0.2); gap: 1px; }
+.tab-btn {
+  flex: 1; padding: 10px; background: var(--tn-bg-2); border: none;
+  border-bottom: 2px solid transparent; color: var(--tn-fg); opacity: 0.6;
+  cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.2s;
+}
+.tab-btn:hover { opacity: 1; background: rgba(255,255,255,0.02); }
+.tab-btn.active { opacity: 1; border-bottom-color: var(--tn-green); color: var(--tn-green); background: rgba(158, 206, 106, 0.05); }
+
+.content-scroll { flex: 1; overflow-y: auto; padding: 16px; }
+.panel { display: none; animation: fadeIn 0.3s ease; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { 
+  opacity: 0;
+   transform { translateY(5px);
+   } 
+   to { 
+    opacity: 1; 
+    transform { 
+      translateY(0);
+     } } } }
+
+.control-group {
+  background: rgba(0,0,0,0.2); border: 1px solid var(--tn-border);
+  padding: 12px; border-radius: 6px; margin-bottom: 12px;
+}
+.control-header {
+  font-size: 0.7rem; letter-spacing: 1px;
+  color: var(--tn-magenta); margin-bottom: 8px; font-weight: 700;
+}
+
+input[type="range"] {
+  width: 100%; accent-color: var(--tn-accent); margin-bottom: 5px; cursor: pointer; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px;
+}
+input[type="number"] {
+  /* Style for the new precision input */
+  padding: 4px; background: rgba(0,0,0,0.3); border: 1px solid var(--tn-border); 
+  border-radius: 4px; font-family: 'JetBrains Mono'; font-size: 0.8rem; 
+  color: var(--tn-cyan);
+}
+select {
+  width: 100%; background: rgba(0,0,0,0.3); color: var(--tn-fg); border: 1px solid var(--tn-border);
+  padding: 6px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 8px; outline: none; cursor: pointer;
+}
+.val-display { float: right; font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--tn-cyan); }
+label { font-size: 0.75rem; color: var(--tn-fg); display: block; margin-bottom: 4px; margin-top: 8px; }
+
+.btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.btn-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
+.btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+button.action-btn {
+  width: 100%; padding: 8px; margin-top: 6px; border-radius: 4px;
+  border: 1px solid var(--tn-border); background: rgba(122, 162, 247, 0.1);
+  color: var(--tn-accent); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.8rem;
+}
+button.action-btn:hover { background: var(--tn-accent); color: var(--tn-bg); }
+button.secondary { background: transparent; border-color: var(--tn-border); color: var(--tn-fg); opacity: 0.8; }
+button.secondary:hover { opacity: 1; border-color: var(--tn-fg); }
+button.seed-btn { margin-top: 0; background: rgba(158, 206, 106, 0.1); color: var(--tn-green); border-color: var(--tn-green); }
+button.seed-btn:hover { background: var(--tn-green); color: var(--tn-bg-2); }
+button.special-seed-btn { background: rgba(255, 158, 100, 0.1); color: var(--tn-orange); border-color: var(--tn-orange); }
+button.special-seed-btn:hover { background: var(--tn-orange); color: var(--tn-bg-2); }
+
+
+pre { margin: 0 !important; border-radius: 6px; font-size: 0.7rem !important; border: 1px solid var(--tn-border); background: #16161e !important; padding: 10px !important; }
+
+.kernel-viz {
+  width: 100%; height: 50px; background: #16161e; border-radius: 4px;
+  margin-bottom: 8px; position: relative; border: 1px solid var(--tn-border);
+}
+.kernel-info { font-size:0.7rem; color:var(--tn-comment); margin-top:6px; line-height: 1.4; }
+
+@media (max-width: 800px) {
+  /* Mobile layout: sidebar at bottom, canvas at top */
+  .sidebar { width: 100%; height: 50%; position: absolute; bottom: 0; border-top: 1px solid var(--tn-border); }
+  .canvas-area { height: 50%; border-bottom: 1px solid var(--tn-border); border-right: none; }
+  .app-container { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="canvas-area" id="canvas-container">
+    <canvas id="leniaCanvas"></canvas>
+    
+    <div style="position:absolute; top:15px; left:15px; font-family:'JetBrains Mono'; font-size:11px; color:var(--tn-fg); background:rgba(0,0,0,0.6); padding:6px 10px; border-radius:4px; pointer-events:none; backdrop-filter:blur(2px);">
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+        <span style="color:var(--tn-green); font-size:14px;">●</span> <span id="sim-status">Actif (x2.0 Vitesse)</span>
+      </div>
+      <div style="opacity:0.8;">
+        FPS: <span id="fps-counter">0</span> | Steps: <span id="step-counter">0</span> | Res: <span id="res-display">140x140</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="header-box">
+      <div class="header-title-row">
+        <div class="header-icon">LEN</div>
+        <div>
+          <h1>LENIA \( (\text{Lenia}_K) \)</h1>
+          <div class="subtitle">Simulateur Multi-Kernel CPU</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setTab('sim')">Labo</button>
+      <button class="tab-btn" onclick="setTab('theory')">Théorie</button>
+      <button class="tab-btn" onclick="setTab('code')">Code</button>
+    </div>
+
+    <div class="content-scroll">
+      
+      <div id="panel-sim" class="panel active">
+        
+        <div class="control-group">
+          <div class="control-header">🧬 ESPÈCES ET GRAINE INITIALE</div>
+          <select id="species-select" onchange="loadSpecies(this.value, true)">
+            <option value="" disabled selected>-- Choisir une créature (Preset) --</option>
+            <option value="orbium">Orbium (Base)</option>
+            <option value="wanderer">Wanderer (Planeur)</option>
+            <option value="geminium">Hydrogeminium (Double)</option>
+            <option value="fish">K=3 Fish (Multi-Kernel)</option>
+            <option value="pacman">Pacman (Multi-Kernel)</option>
+            <option value="emitter">Smooth Glider Gun (Multi-Kernel)</option>
+            <option value="aquarium">Tessellatium gyrans (Multi-Kernel)</option>
+            <option value="bosco">Bosco (Binaire)</option>
+          </select>
+          <p class="kernel-info">
+            Le choix d'une espèce charge ses paramètres de Kernel \( K \), de croissance \( G \) (Mu/Sigma) et son motif de cellules initiales.
+          </p>
+          <button class="action-btn seed-btn" onclick="resetGridWithSeed()" style="margin-top:10px;">
+                ↻ Réinitialiser la Grille (Motif Initial)
+            </button>
+        </div>
+        
+        <div class="control-group">
+          <div class="control-header">⏳ TEMPS \( (T) \) ET VITESSE</div>
+          
+          <label>
+            Temps \(T\) (Taux de mise à jour \(dt=1/T\))
+            <span id="val-T" class="val-display">10.0</span>
+          </label>
+          <input type="range" id="inp-T" min="1" max="20" step="0.5" value="10.0" oninput="updateT(this.value)">
+          <p class="kernel-info">Contrôle la rapidité de l'évolution. \(T\) élevé \(\rightarrow\) mises à jour plus douces.</p>
+          
+          <label>
+            Multiplicateur de Vitesse (Pas/Image)
+            <span id="val-speed" class="val-display">2.0</span>
+          </label>
+          <input type="range" id="inp-speed" min="0.1" max="5.0" step="0.1" value="2.0">
+          <p class="kernel-info">Contrôle le nombre de pas de simulation effectués par image affichée (performance).</p>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">📈 FONCTION DE CROISSANCE \(G( \mu, \sigma) \) (Kernel #1)</div>
+          <p class="kernel-info" id="kernel-count-info">Cette espèce utilise actuellement <span style="color:var(--tn-cyan); font-weight:700;">1</span> Kernel. Les contrôles ci-dessous affectent le Kernel principal (Kernel #1).</p>
+          
+          <!-- Kernel Visualization -->
+          <div id="kernel-graph" class="kernel-viz"></div>
+          
+          <label>
+            \(\mu\) (Mu) - Cible de croissance (Centre de la Gaussienne)
+            <span id="val-mu" class="val-display">0.1500</span>
+          </label>
+          <div class="flex gap-2 items-center"> 
+            <input type="range" id="inp-mu" min="0.05" max="0.5" step="0.001" class="flex-grow">
+            <input type="number" id="inp-mu-precise" min="0.05" max="0.5" step="0.0001" value="0.1500" style="width: 100px;">
+          </div>
+          
+          <label>
+            \(\sigma\) (Sigma) - Tolérance (Largeur de la Gaussienne)
+            <span id="val-sigma" class="val-display">0.0170</span>
+          </label>
+          <div class="flex gap-2 items-center">
+            <input type="range" id="inp-sigma" min="0.001" max="0.15" step="0.001" class="flex-grow">
+            <input type="number" id="inp-sigma-precise" min="0.001" max="0.15" step="0.0001" value="0.0170" style="width: 100px;">
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <div class="control-header">🌀 FILTRE DE PERCEPTION (Kernel \( K \)) (Global)</div>
+          
+          <label>
+            Rayon Principal \(R\) (Taille de la Perception)
+            <span id="val-R" class="val-display">16</span>
+          </label>
+          <input type="range" id="inp-R" min="8" max="40" step="1" value="16" oninput="updateR(this.value)">
+          
+          <label>
+            Spread Gaussien du Kernel \( s_K \) (Épaisseur de l'Anneau)
+            <span id="val-sk" class="val-display">0.150</span>
+          </label>
+          <input type="range" id="inp-sk" min="0.05" max="0.3" step="0.001" value="0.150" oninput="updateSk(this.value)">
+          <p class="kernel-info">Ajustez la forme générale du Kernel. Les espèces Multi-Kernel ont des formes prédéfinies.</p>
+        </div>
+        
+
+        <div class="control-group">
+            <div class="control-header">🖼️ Contrôles d'Affichage et Grille</div>
+            <label>
+              Taille de la Grille (GRID_SIZE)
+              <span id="val-res" class="val-display">140</span>
+            </label>
+            <input type="range" id="inp-res" min="80" max="300" step="10" value="140">
+            <button class="action-btn secondary" onclick="setGridSize(parseInt(document.getElementById('inp-res').value))">
+                Appliquer la Résolution et Réinitialiser
+            </button>
+            <p style="font-size:0.7rem; color:var(--tn-comment); margin-top:6px;">Attention : Les hautes résolutions peuvent ralentir l'animation CPU.</p>
+
+            <select id="palette-select" onchange="changePalette(this.value)" style="margin-top:12px;">
+              <option value="tokyo">Tokyo Night</option>
+              <option value="magma">Magma (Intense)</option>
+              <option value="viridis">Viridis (Biologique)</option>
+              <option value="bw">Monochrome</option>
+            </select>
+            
+            <div class="btn-grid">
+              <button class="action-btn secondary" onclick="togglePause()" id="btn-pause">⏸ Pause</button>
+              <button class="action-btn secondary" onclick="clearGrid()">🗑 Nettoyer</button>
+            </div>
+        </div>
+        
+        <p style="font-size:0.7rem; color:var(--tn-cyan); opacity:0.7; text-align:center;">
+          🖱️ Clic Gauche : Dessiner | Clic Droit : Effacer
+        </p>
+      </div>
+
+      <!-- THEORY PANEL -->
+      <div id="panel-theory" class="panel">
+        <h2 style="color:var(--tn-green); font-size:1rem; margin-bottom:10px;">L'équation de Lenia Multi-Kernel \((\text{Lenia}_K)\)</h2>
+        <p style="font-size:0.85rem; margin-bottom:15px; line-height:1.5; color:var(--tn-fg);">
+          Lenia généralise le jeu de la Vie en introduisant des fonctions continues. L'évolution du champ \(A\) est donnée par :
+        </p>
+        
+        <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; margin:15px 0; border-left:3px solid var(--tn-accent);">
+          $$\frac{\partial A}{\partial t} = \sum_{k=1}^{N_K} h_k \cdot G_k(U_k, \mu_k, \sigma_k)$$
+        </div>
+        
+        <p style="font-size:0.85rem; margin-bottom:15px; line-height:1.5; color:var(--tn-fg);">
+          Où \(U_k\) est la Perception (Convolution) pour le Kernel \(k\): \(U_k = K_k * A\).
+        </p>
+        
+        <h3 style="color:var(--tn-cyan); font-size:0.9rem; margin-top:15px; margin-bottom:5px;">1. Perception (Convolution) \(U = K * A\) </h3>
+        <p style="font-size:0.8rem; line-height:1.4;">
+          Chaque cellule convolue son voisinage avec un Kernel \(K_k\) (un filtre en anneau gaussien), créant une carte de perception \(U_k\).
+          <ul style="margin-left:20px; font-size:0.75rem;">
+            <li><strong>Filtre \(K\) :</strong>__ Définit la forme et le rayon de l'anneau de perception.</li>
+            <li><strong>Multi-Kernel :</strong> Certaines espèces (comme 'Fish') utilisent plusieurs filtres \(K_k\) simultanément, chacun ayant son propre rayon \(R_k\) et sa propre forme.</li>
+          </ul>
+        </p>
+        
+        <h3 style="color:var(--tn-cyan); font-size:0.9rem; margin-top:15px; margin-bottom:5px;">2. Fonction de Croissance (Physiologie) \(G(\mu, \sigma)\)</h3>
+        <p style="font-size:0.8rem; line-height:1.4;">
+          La fonction de croissance \(G_k\) est une cloche gaussienne qui convertit la masse perçue \(U_k\) en un taux de croissance/décroissance (entre -1 et +1).
+          <ul style="margin-left:20px; font-size:0.75rem;">
+            <li>\(\mu\): Cible de croissance (le niveau de \(U\) pour une croissance maximale).</li>
+            <li>\( \sigma\): Tolérance (la largeur autour de $\mu$ où la croissance est positive).</li>
+            <li>\(h_k\): Hauteur/Poids : Facteur de mise à l'échelle pour l'influence totale de ce Kernel/Croissance.</li>
+          </ul>
+        </p>
+      </div>
+
+      <!-- CODE PANEL -->
+      <div id="panel-code" class="panel">
+        <p style="font-size:0.8rem; color:var(--tn-comment); margin-bottom:8px;">Le cœur de la simulation Multi-Kernel (Logique JS) :</p>
+        <pre><code class="language-javascript">// Fonction Bell gaussienne (x: input, m: mean/mu, s: spread/sigma)
+const bell = (x, m, s) => Math.exp(-Math.pow((x-m)/s, 2) / 2);
+
+// Convolution et Mise à jour pour TOUS les Kernels
+function step() {
+  const dt = 1 / params.T; 
+  let totalGrowth = new Float32Array(GRID_SIZE * GRID_SIZE); // Initialisation à zéro
+
+  // Boucle sur chaque cellule (i, j)
+  for(let i = 0; i < GRID_SIZE; i++) {
+    for(let j = 0; j < GRID_SIZE; j++) {
+      let cellIndex = i * GRID_SIZE + j;
+      let sumOfKernelGrowth = 0;
+
+      // Boucle sur chaque Kernel K_k précalculé
+      for(let k = 0; k < precalculatedKernels.length; k++) {
+        const kernelData = precalculatedKernels[k];
+        const kernelParams = currentSpecies.kernels[k];
+        let U_k = 0; // Perception U pour ce Kernel
+
+        // Convolution U_k = K_k * A
+        for(let l = 0; l < kernelData.weights.length; l++) {
+          // ... calcul de la somme pondérée du voisinage ...
+          // U_k += grid[neighborIndex] * kernelData.weights[l];
+        }
+
+        // Fonction de Croissance G_k(U_k) = bell(U_k, mu_k, sigma_k) * 2 - 1
+        const G_k = bell(U_k, kernelParams.mu, kernelParams.sigma) * 2 - 1;
+        
+        // Accumulation pondérée
+        sumOfKernelGrowth += kernelParams.h * G_k; 
+      }
+      
+      // Mise à jour : A = A + dt * G_total (TotalGrowth)
+      const current = grid[cellIndex];
+      let nextVal = current + sumOfKernelGrowth * dt;
+      
+      // Clamping [0, 1]
+      nextGrid[cellIndex] = Math.min(1, Math.max(0, nextVal));
+    }
+  }
+  // Échange des tampons (swap buffers)
+}</code></pre>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================
+   DONNÉES DES ESPÈCES (Patterns & Kernels)
+   ========================================== */
+// J'utilise le format Multi-Kernel pour la consistance.
+// La forme de Kernel (K) est définie par bells, mais on utilise un Ring Gaussien
+// La fonction de croissance (G) est définie par mu, sigma et height (h)
+
+const SPECIES_DATA = {
+    // Single Kernel (Orbium) - Simplified B: [1] means a standard Gaussian Ring at R.
+    "orbium": {
+        name: "Orbium", R: 13, T: 10,
+        kernels: [{ mu: 0.15, sigma: 0.015, h: 1, r: 1, bells: [1], name: "Anneau Gaussien" }],
+        cells: [[0,0,0,0,0,0,0.1,0.14,0.1,0,0,0.03,0.03,0,0,0.3,0,0,0,0], [0,0,0,0,0,0.08,0.24,0.3,0.3,0.18,0.14,0.15,0.16,0.15,0.09,0.2,0,0,0,0], [0,0,0,0,0,0.15,0.34,0.44,0.46,0.38,0.18,0.14,0.11,0.13,0.19,0.18,0.45,0,0,0], [0,0,0,0,0.06,0.13,0.39,0.5,0.5,0.37,0.06,0,0,0,0.02,0.16,0.68,0,0,0], [0,0,0,0.11,0.17,0.17,0.33,0.4,0.38,0.28,0.14,0,0,0,0,0,0.18,0.42,0,0], [0,0,0.09,0.18,0.13,0.06,0.08,0.26,0.32,0.32,0.27,0,0,0,0,0,0,0.82,0,0], [0.27,0,0.16,0.12,0,0,0,0.25,0.38,0.44,0.45,0.34,0,0,0,0,0,0.22,0.17,0], [0,0.07,0.2,0.02,0,0,0,0.31,0.48,0.57,0.6,0.57,0,0,0,0,0,0,0.49,0], [0,0.59,0.19,0,0,0,0,0.2,0.57,0.69,0.76,0.76,0.49,0,0,0,0,0,0.36,0], [0,0.58,0.19,0,0,0,0,0,0.67,0.83,0.9,0.92,0.87,0.12,0,0,0,0,0.22,0.07], [0,0,0.46,0,0,0,0,0,0.7,0.93,1,1,1,0.61,0,0,0,0,0.18,0.11], [0,0,0.82,0,0,0,0,0,0.47,1,1,0.98,1,0.96,0.27,0,0,0,0.19,0.1], [0,0,0.46,0,0,0,0,0,0.25,1,1,0.84,0.92,0.97,0.54,0.14,0.04,0.1,0.21,0.05], [0,0,0,0.4,0,0,0,0,0.09,0.8,1,0.82,0.8,0.85,0.63,0.31,0.18,0.19,0.2,0.01], [0,0,0,0.36,0.1,0,0,0,0.05,0.54,0.86,0.79,0.74,0.72,0.6,0.39,0.28,0.24,0.13,0], [0,0,0,0.01,0.3,0.07,0,0,0.08,0.36,0.64,0.7,0.64,0.6,0.51,0.39,0.29,0.19,0.04,0], [0,0,0,0,0.1,0.24,0.14,0.1,0.15,0.29,0.45,0.53,0.52,0.46,0.4,0.31,0.21,0.08,0,0], [0,0,0,0,0,0.08,0.21,0.21,0.22,0.29,0.36,0.39,0.37,0.33,0.26,0.18,0.09,0,0,0], [0,0,0,0,0,0,0.03,0.13,0.19,0.22,0.24,0.24,0.23,0.18,0.13,0.05,0,0,0,0], [0,0,0,0,0,0,0,0,0.02,0.06,0.08,0.09,0.07,0.05,0.01,0,0,0,0,0]]
+    },
+    
+    "wanderer": {
+        name: "Smooth wanderer", R: 13, T: 10,
+        kernels: [{ mu: 0.1, sigma: 0.005, h: 1, r: 1, bells: [3/4, 1], name: "Anneau Externe/Interne" }],
+        cells: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0.01,0.01,0.01,0.01,0.01,0.02,0.03,0.04,0.05,0.04,0.01,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0.02,0.03,0.02,0.01,0.02,0.04,0.04,0.06,0.09,0.10,0.11,0.12,0.05,0.01,0.01,0,0,0,0,0,0,0], [0,0,0,0,0.01,0.07,0.07,0.08,0.09,0.09,0.10,0.12,0.20,0.28,0.41,0.58,0.62,0.51,0.30,0.08,0.04,0.01,0,0,0,0,0], [0,0,0,0.01,0.07,0.03,0.05,0.05,0.06,0.09,0.14,0.21,0.27,0.27,0.14,0.07,0.10,0.28,0.71,0.73,0.28,0.10,0.03,0,0,0,0], [0,0,0.01,0.01,0.04,0.05,0.04,0.06,0.10,0.16,0.19,0.22,0.07,0.01,0.04,0.03,0.06,0.07,0.07,0.37,0.78,0.47,0.22,0.09,0.01,0,0], [0,0,0.01,0.01,0.05,0.04,0.06,0.10,0.12,0.17,0.24,0.13,0.05,0.02,0.04,0.07,0.08,0.09,0.07,0.07,0.38,0.74,0.49,0.32,0.12,0,0], [0,0,0.01,0.01,0.04,0.06,0.07,0.12,0.14,0.19,0.26,0.03,0.05,0.05,0.03,0.09,0.08,0.11,0.13,0.13,0.25,0.47,0.58,0.39,0.31,0.02,0], [0,0,0,0,0.03,0.10,0.08,0.13,0.15,0.21,0.19,0.05,0.06,0.13,0.02,0.06,0.13,0.19,0.27,0.26,0.32,0.41,0.50,0.39,0.32,0.14,0], [0,0,0,0,0.03,0.06,0.09,0.12,0.15,0.24,0.04,0.06,0.12,0.18,0.08,0.17,0.05,0.09,0.20,0.26,0.35,0.46,0.49,0.45,0.30,0.21,0], [0,0,0,0.01,0.01,0.03,0.09,0.11,0.16,0.28,0.08,0.08,0.08,0.09,0.33,0.32,0.44,0.04,0.06,0.14,0.31,0.50,0.59,0.55,0.32,0.21,0], [0,0,0,0,0.01,0.03,0.09,0.09,0.14,0.21,0,0,0,0.01,0.32,0.32,0.33,0.07,0.06,0.09,0.29,0.58,0.70,0.60,0.34,0.18,0], [0,0,0,0,0,0.07,0.10,0.08,0.14,0.19,0,0,0.01,0.02,0.03,0.13,0.10,0.07,0.08,0.12,0.39,0.65,0.65,0.54,0.33,0.12,0], [0,0,0,0,0,0.04,0.15,0.08,0.15,0.30,0.07,0.11,0.13,0.14,0.14,0.12,0.12,0.11,0.12,0.19,0.59,0.61,0.55,0.46,0.29,0.06,0], [0,0,0,0,0,0,0.08,0.18,0.14,0.40,0.08,0.04,0.06,0.15,0.29,0.27,0.13,0.12,0.14,0.46,0.62,0.51,0.42,0.36,0.25,0.01,0], [0,0,0,0,0,0,0,0.09,0.19,0.27,0.48,0.07,0.07,0.14,0.27,0.24,0.13,0.12,0.26,0.55,0.55,0.39,0.31,0.28,0.20,0,0], [0,0,0,0,0,0,0,0.01,0.12,0.21,0.46,0.48,0.11,0.07,0.08,0.08,0.07,0.10,0.36,0.59,0.50,0.30,0.26,0.27,0.09,0,0], [0,0,0,0,0,0,0,0,0.01,0.09,0.23,0.45,0.61,0.33,0.08,0.05,0.06,0.19,0.57,0.66,0.40,0.28,0.26,0.26,0,0,0], [0,0,0,0,0,0,0,0,0,0,0.01,0.09,0.27,0.62,0.75,0.58,0.55,0.68,0.65,0.46,0.36,0.31,0.29,0.03,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.03,0.12,0.22,0.28,0.30,0.31,0.29,0.21,0.03,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0.03,0.05,0.06,0.03,0,0,0,0,0,0]]
+    },
+    
+    // Multi-Kernel presets (using a single cell channel for simplicity)
+    "fish": {
+        name: "K=3 Fish", R: 10, T: 5,
+        kernels: [
+            { mu: 0.156, sigma: 0.0118, h: 1, r: 1, bells: [1, 5/12, 2/3], name: "Ring 1 (Complex)" },
+            { mu: 0.193, sigma: 0.049, h: 1, r: 1, bells: [1/12, 1], name: "Ring 2 (Inner/Outer)" },
+            { mu: 0.342, sigma: 0.0891, h: 1, r: 1, bells: [1], name: "Ring 3 (Standard)" }
+        ],
+        cells: [[0,0,0,0,0,0,0,0,0,0,0,0.06,0.1,0.04,0.02,0.01,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0.15,0.37,0.5,0.44,0.19,0.23,0.3,0.23,0.15,0.01,0,0,0,0], [0,0,0,0,0,0,0.32,0.78,0.26,0,0.11,0.11,0.1,0.08,0.18,0.16,0.17,0.24,0.09,0,0,0], [0,0,0,0,0.45,0.16,0,0,0,0,0,0.15,0.15,0.16,0.15,0.1,0.09,0.21,0.24,0.12,0,0], [0,0,0,0.1,0,0,0,0,0,0,0,0.17,0.39,0.43,0.34,0.25,0.15,0.16,0.15,0.25,0.03,0], [0,0.15,0.06,0,0,0,0,0,0,0,0.24,0.72,0.92,0.85,0.61,0.47,0.39,0.27,0.12,0.18,0.17,0], [0,0.08,0,0,0,0,0,0,0,0,1.0,1.0,1.0,1.0,0.73,0.6,0.56,0.31,0.12,0.15,0.24,0.01], [0,0.16,0,0,0,0,0,0,0,0.76,1.0,1.0,1.0,1.0,0.76,0.72,0.65,0.39,0.1,0.17,0.24,0.05], [0,0.05,0,0,0,0,0,0,0.21,0.83,1.0,1.0,1.0,1.0,0.86,0.85,0.76,0.36,0.17,0.13,0.21,0.07], [0,0.05,0,0,0.02,0,0,0,0.4,0.91,1.0,1.0,1.0,1.0,1.0,0.95,0.79,0.36,0.21,0.09,0.18,0.04], [0.06,0.08,0,0.18,0.21,0.1,0.03,0.38,0.92,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.64,0.31,0.12,0.07,0.25,0], [0.05,0.12,0.27,0.4,0.34,0.42,0.93,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.97,0.33,0.16,0.05,0.1,0.26,0], [0,0.25,0.21,0.39,0.99,1.0,1.0,1.0,1.0,1.0,1.0,0.86,0.89,0.94,0.83,0.13,0,0,0.04,0.21,0.18,0], [0,0.06,0.29,0.63,0.84,0.97,1.0,1.0,1.0,0.96,0.46,0.33,0.36,0,0,0,0,0,0.03,0.35,0,0], [0,0,0.13,0.22,0.59,0.85,0.99,1.0,0.98,0.25,0,0,0,0,0,0,0,0,0.34,0.14,0,0], [0,0,0,0,0.33,0.7,0.95,0.8,0.33,0.11,0,0,0,0,0,0,0,0.11,0.26,0,0,0], [0,0,0,0,0.16,0.56,0.52,0.51,0.4,0.18,0.01,0,0,0,0,0,0,0.42,0,0,0,0], [0,0,0,0,0.01,0,0.33,0.47,0.33,0.05,0,0,0,0,0,0,0.35,0,0,0,0,0], [0,0,0,0,0,0.26,0.32,0.13,0,0,0,0,0,0,0,0.34,0,0,0,0,0,0], [0,0,0,0,0,0.22,0.25,0.03,0,0,0,0,0,0,0.46,0,0,0,0,0,0,0], [0,0,0,0,0,0,0.09,0.2,0.22,0.23,0.23,0.22,0.3,0.3,0,0,0,0,0,0,0,0]]
+    },
+    
+    "geminium": {
+        name: "Hydrogeminium", R: 18, T: 10,
+        kernels: [{ mu: 0.26, sigma: 0.036, h: 1, r: 1, bells: [0.5, 1, 0.667], name: "Triple Ring" }],
+        cells: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0.02,0.03,0.04,0.04,0.04,0.03,0.02,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.04,0.1,0.16,0.2,0.23,0.25,0.24,0.21,0.18,0.14,0.1,0.07,0.03,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0.09,0.2,0.33,0.44,0.52,0.56,0.58,0.55,0.51,0.44,0.37,0.3,0.23,0.16,0.08,0.01,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.13,0.29,0.45,0.6,0.75,0.85,0.9,0.91,0.88,0.82,0.74,0.64,0.55,0.46,0.36,0.25,0.12,0.03,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.14,0.38,0.6,0.78,0.93,1.0,1.0,1.0,1.0,1.0,1.0,0.99,0.89,0.78,0.67,0.56,0.44,0.3,0.15,0.04,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.08,0.39,0.74,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.98,0.85,0.74,0.62,0.47,0.3,0.14,0.03,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.32,0.76,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.88,0.75,0.61,0.45,0.27,0.11,0.01,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.35,0.83,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.88,0.73,0.57,0.38,0.19,0.05,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.99,1.0,1.0,1.0,1.0,0.99,1.0,1.0,1.0,1.0,1.0,1.0,0.85,0.67,0.47,0.27,0.11,0.01], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.55,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.93,0.83,0.79,0.84,0.88,0.89,0.9,0.93,0.98,1.0,1.0,1.0,1.0,0.98,0.79,0.57,0.34,0.15,0.03], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.47,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.9,0.72,0.54,0.44,0.48,0.6,0.7,0.76,0.82,0.91,0.99,1.0,1.0,1.0,1.0,0.91,0.67,0.41,0.19,0.05], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.27,0.99,1.0,1.0,1.0,1.0,0.9,0.71,0.65,0.55,0.38,0.2,0.14,0.21,0.36,0.52,0.64,0.73,0.84,0.95,1.0,1.0,1.0,1.0,1.0,0.78,0.49,0.24,0.07], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.14,0.63,0.96,1.0,1.0,1.0,0.84,0.17,0,0,0,0,0,0,0,0.13,0.35,0.51,0.64,0.77,0.91,0.99,1.0,1.0,1.0,1.0,0.88,0.58,0.29,0.09], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.07,0.38,0.72,0.95,1.0,1.0,1.0,0.22,0,0,0,0,0,0,0,0,0,0.11,0.33,0.5,0.67,0.86,0.99,1.0,1.0,1.0,1.0,0.95,0.64,0.33,0.1], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.32,0.49,0.71,0.93,1.0,1.0,1.0,0.56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0.31,0.52,0.79,0.98,1.0,1.0,1.0,1.0,0.98,0.67,0.35,0.11], [0,0,0,0,0,0,0,0,0,0,0,0,0.01,0.6,0.83,0.98,1.0,1.0,0.68,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.15,0.38,0.71,0.97,1.0,1.0,1.0,1.0,0.97,0.67,0.35,0.11], [0,0,0,0,0,0,0,0,0,0,0,0,0.13,0.51,0.96,1.0,1.0,0.18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.09,0.34,0.68,0.95,1.0,1.0,1.0,1.0,0.91,0.61,0.32,0.1], [0,0,0,0,0,0,0,0,0,0,0,0.33,0.7,0.94,1.0,1.0,0.44,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.17,0.45,0.76,0.96,1.0,1.0,1.0,1.0,0.82,0.52,0.26,0.07], [0,0,0,0,0,0,0,0,0,0,0.53,0.89,1.0,1.0,1.0,0.8,0.43,0.04,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.33,0.68,0.91,0.99,1.0,1.0,1.0,1.0,0.71,0.42,0.19,0.03], [0,0,0,0,0,0,0,0,0,0,0.77,0.99,1.0,0.97,0.58,0.41,0.33,0.18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.47,0.86,1.0,1.0,1.0,1.0,1.0,1.0,0.95,0.58,0.32,0.12,0], [0,0,0,0,0,0,0,0,0,0.39,0.83,1.0,1.0,0.55,0.11,0.05,0.15,0.22,0.06,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.54,0.95,1.0,1.0,1.0,1.0,1.0,1.0,0.8,0.44,0.21,0.06,0], [0,0,0,0,0,0,0,0,0.04,0.55,0.81,0.86,0.97,1.0,1.0,0.5,0,0,0.01,0.09,0.03,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.26,0.78,1.0,1.0,1.0,1.0,1.0,1.0,0.66,0.35,0.13,0.03,0,0], [0,0,0,0,0,0,0,0,0.33,1.0,1.0,1.0,1.0,1.0,1.0,0.93,0.11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.23,0.73,0.95,1.0,1.0,1.0,1.0,1.0,0.62,0.35,0.12,0,0,0,0], [0,0,0,0,0,0,0,0.51,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.72,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.56,0.25,0.09,0,0,0,0,0,0], [0,0,0,0,0,0,0.12,0.38,1.0,1.0,1.0,0.66,0.08,0.55,1.0,1.0,1.0,0.03,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.35,1.0,1.0,1.0,1.0,1.0,1.0,0.67,0.12,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0.6,1.0,1.0,1.0,1.0,0.49,0,0,0.87,1.0,0.88,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,1.0,1.0,1.0,1.0,1.0,0.7,0.07,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0.04,0.21,0.48,1.0,1.0,1.0,1.0,1.0,1.0,0.96,0,0.31,1.0,1.0,1.0,0.53,0,0,0,0,0,0,0,0,0.2,0.21,0,0,0,0.27,1.0,1.0,1.0,1.0,1.0,1.0,0.87,0.52,0.01,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0.84,1.0,1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0.83,1.0,1.0,0.52,0,0,0,0,0,0,0,0.26,0.82,0.59,0.02,0,0,0.46,1.0,1.0,1.0,1.0,1.0,0.9,0.55,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0.39,0.99,1.0,1.0,1.0,1.0,0.78,0.04,0,0,0,0,0,0,0,0.93,0.92,0,0,0,0,0,0,0,0,0.69,1.0,1.0,0.36,0,0,1.0,1.0,0.65,0.66,0.97,0.87,0.54,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.55,0.75,0.59,0.74,1.0,1.0,0,0,0,0.75,0.71,0.18,0,0,0,0,0,0,0,0,0,0.29,0,0,0.45,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.47,0.39,0.71,0.25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.69,0.81,0.8,0.92,1.0,0.13,0,0,0.13,0.94,0.58,0,0,0,0,0,0,0,0,0,1.0,1.0,0.34,0,0.04,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.63,0.85,0.9,0.98,1.0,0.09,0,0,0.02,1.0,0.64,0,0,0,0,0,0,0,0,0,0.59,1.0,1.0,0.84,0,0,1.0,1.0,1.0,1.0,1.0,1.0,0.64,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.64,0.65,0.67,1.0,1.0,0.21,0.01,0,0.04,0.02,0,0,0,0,0,0,0,0,0,0.69,1.0,1.0,1.0,0.29,0.37,1.0,1.0,0.6,0.63,1.0,0.84,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.44,0.73,0.73,0.85,1.0,0.97,0.23,0.05,0,0,0,0,0,0,0,0,0,0.06,0,0,0.97,1.0,1.0,1.0,1.0,1.0,1.0,0.33,0.24,0.67,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0.12,0.55,0.9,0.9,1.0,1.0,1.0,0.43,0.04,0,0,0,0,0,0,0,0,0.31,0.54,0,0,0.88,1.0,1.0,1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0.29,0.71,1.0,1.0,1.0,1.0,0.79,0.28,0,0,0,0,0,0,0,0,0,0.4,0.77,0.54,0,0.87,1.0,1.0,1.0,1.0,1.0,0.31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0.16,0.27,0.41,0.72,0.99,1.0,1.0,0.82,0.42,0.09,0,0,0,0,0,0,0,0,0.1,0.55,0.58,0.58,0.77,0.99,1.0,1.0,1.0,0.63,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0.31,0.48,0.45,0.46,0.63,0.88,1.0,0.83,0.59,0.28,0.06,0,0,0,0,0,0,0,0,0.32,0.7,0.95,1.0,1.0,1.0,1.0,0.7,0.58,0.12,0.04,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0.23,0.54,0.53,0.48,0.57,0.59,0.65,0.63,0.55,0.35,0.13,0.03,0.02,0.09,0.74,1.0,0.09,0,0,0.32,0.86,1.0,1.0,1.0,1.0,0.57,0.44,0.31,0.16,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0.31,0.45,0.31,0.18,0.28,0.39,0.47,0.54,0.5,0.35,0.2,0.16,0.28,0.75,1.0,0.42,0.01,0.6,1.0,1.0,1.0,1.0,0.51,0.29,0.09,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0.14,0.3,0.4,0.54,0.71,0.74,0.65,0.49,0.35,0.27,0.47,0.6,0.6,0.72,0.98,1.0,1.0,1.0,1.0,0.65,0.33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0.06,0.33,0.53,0.69,0.94,0.99,1.0,0.84,0.41,0.16,0.15,0.96,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.73,0.13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0.42,0.86,0.98,0.98,0.99,1.0,0.94,0.63,0.32,0.62,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.65,0.23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0.07,0.62,0.95,1.0,1.0,0.99,0.98,0.99,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.98,0.14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0.03,0.46,0.89,1.0,1.0,0.97,0.83,0.75,0.81,0.94,1.0,1.0,1.0,1.0,0.99,0.03,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0.14,0.57,0.88,0.93,0.81,0.58,0.45,0.48,0.64,0.86,0.97,0.99,0.99,0.42,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0.23,0.45,0.47,0.39,0.29,0.19,0.2,0.46,0.28,0.03,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0.08,0.22,0.24,0.15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0.07,0.22,0.14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+    },
+
+    "bosco": {
+        name: "Bosco (Binaire)", R: 5, T: 10,
+        kernels: [{ mu: 0.39, sigma: 0.05, h: 1, r: 1, bells: [1], name: "Anneau standard" }], // Simplification: Binaire uses custom G(u) but use Gaussian for UI control
+        cells: [[0,0,0,0,1,0,0,0,0,0], [0,0,1,1,1,1,1,0,0,0], [0,1,1,0,0,1,1,1,1,0], [1,1,0,0,0,1,1,1,1,1], [1,0,0,0,0,0,1,1,1,1], [1,1,0,0,0,0,1,1,1,1], [1,1,1,0,1,1,1,1,1,1], [0,1,1,1,1,1,1,1,1,0], [0,1,1,1,1,1,1,1,0,0], [0,0,1,1,1,1,1,0,0,0], [0,0,0,1,1,1,0,0,0,0]]
+    },
+    
+    // Multi-Kernel (using only the first channel's cells and first few kernels for complexity management)
+    "aquarium": {
+        name: "Tessellatium gyrans", R: 12, T: 2,
+        kernels: [
+            { mu: 0.272, sigma: 0.0595, h: 0.138, r: 0.91, bells: [1], name: "Ring 1" },
+            { mu: 0.349, sigma: 0.1585, h: 0.48, r: 0.62, bells: [1], name: "Ring 2" },
+            { mu: 0.2, sigma: 0.0332, h: 0.284, r: 0.5, bells: [1, 1/4], name: "Ring 3 (Double)" },
+            { mu: 0.114, sigma: 0.0528, h: 0.256, r: 0.97, bells: [0, 1], name: "Disk/Ring" },
+            // Keeping only 4 for performance/simplicity
+        ],
+        cells: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.04,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0.49,1.0,0,0.03,0.49,0.49,0.28,0.16,0.03,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0.6,0.47,0.31,0.58,0.51,0.35,0.28,0.22,0,0,0,0,0], [0,0,0,0,0,0,0.15,0.32,0.17,0.61,0.97,0.29,0.67,0.59,0.88,1.0,0.92,0.8,0.61,0.42,0.19,0,0,0], [0,0,0,0,0,0,0,0.25,0.64,0.26,0.92,0.04,0.24,0.97,1.0,1.0,1.0,1.0,0.97,0.71,0.33,0.12,0,0], [0,0,0,0,0,0,0,0.38,0.84,0.99,0.78,0.67,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.95,0.62,0.37,0,0], [0,0,0,0,0.04,0.11,0,0.69,0.75,0.75,0.91,1.0,1.0,0.89,1.0,1.0,1.0,1.0,1.0,1.0,0.81,0.42,0.07,0], [0,0,0,0,0.44,0.63,0.04,0,0,0,0.11,0.14,0,0.05,0.64,1.0,1.0,1.0,1.0,1.0,0.92,0.56,0.23,0], [0,0,0,0,0.11,0.36,0.35,0.2,0,0,0,0,0,0,0.63,1.0,1.0,1.0,1.0,1.0,0.96,0.49,0.26,0], [0,0,0,0,0,0.4,0.37,0.18,0,0,0,0,0,0.04,0.41,0.52,0.67,0.82,1.0,1.0,0.91,0.4,0.23,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.04,0,0.05,0.45,0.89,1.0,0.66,0.35,0.09,0], [0,0,0.22,0,0,0,0.05,0.36,0.6,0.13,0.02,0.04,0.24,0.34,0.1,0,0.04,0.62,1.0,1.0,0.44,0.25,0,0], [0,0,0,0.43,0.53,0.58,0.78,0.9,0.96,1.0,1.0,1.0,1.0,0.71,0.46,0.51,0.81,1.0,1.0,0.93,0.19,0.06,0,0], [0,0,0,0,0.23,0.26,0.37,0.51,0.71,0.89,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.42,0.06,0,0,0], [0,0,0,0,0.03,0,0,0.11,0.35,0.62,0.81,0.93,1.0,1.0,1.0,1.0,1.0,0.64,0.15,0,0,0,0,0], [0,0,0,0,0,0,0.06,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0.05,0.09,0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+    },
+    
+    "emitter": {
+        name: "Smooth glider gun", R: 13, T: 2,
+        kernels: [
+            { mu: 0.184, sigma: 0.0632, h: 0.076, r: 0.56, bells: [1], name: "Ring 1" },
+            { mu: 0.1, sigma: 0.1511, h: 0.516, r: 0.76, bells: [1], name: "Ring 2" },
+            { mu: 0.246, sigma: 0.047, h: 0.554, r: 0.5, bells: [1], name: "Ring 3" }
+        ],
+        cells: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0.15,0.48,0.19,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0.61,1.00,1.00,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0.12,0.60,1.00,1.00,1.00,1.00,0,0,0,0,0,0.19,0.61,0.11,0,0,0,0,0], [0,0,0,0,0,0.36,0,0,0,0,0,1.00,1.00,1.00,0.72,0.40,0,0,0,0.91,1.00,0.61,0.26,0,0,0,0,0], [0,0,0,0,0.34,0.76,0.10,0,0,0,0,0,0.96,1.00,0.96,0.83,0.88,0.72,0.86,1.00,1.00,0.87,0.44,0.05,0,0,0,0], [0,0,0,0.12,0.49,0.89,0.16,0,0,0,0,0,0.52,0.96,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,0.50,0.03,0,0,0,0], [0,0,0,0.58,0.82,1.00,0.70,0,0,0,0,0,0,0.37,0.34,0.06,0,0.49,1.00,1.00,1.00,1.00,0.57,0.01,0,0,0,0], [0,0,0.16,0.17,0.16,0.53,0.63,0.82,0.71,0.16,0,0,0,0,0,0,0,0,0,0.52,0.45,0.07,0.37,0.05,0,0,0,0], [0,0,0,0,0,0,0.14,1.00,1.00,1.00,0.43,0,0,0.35,0.03,0,0,0,0,0,0.03,0,0,0.08,0,0,0,0], [0,0,0,0,0,0,0,1.00,1.00,1.00,1.00,1.00,1.00,0.22,0,0,0,0,0,0,0,0.07,0,0.18,0,0,0,0], [0,0,0.25,0,0,0,0,0.01,1.00,1.00,0.81,0.40,0.25,0,0,0,0,0,0,0,0,0.31,0.53,0.48,0,0,0,0], [0,0,0.63,0,0,0,0,0,0.40,1.00,0.14,0.18,0.17,0,0,0,0,0,0.07,0,0.46,1.00,1.00,0.94,0.23,0,0,0], [0,0,0.97,1.00,0,0,0,0,0,1.00,0.19,0.13,0.09,0,0,0,0,0.91,1.00,0.97,1.00,1.00,1.00,0.99,0.61,0,0,0], [0,0.22,1.00,1.00,1.00,0.58,0,0,0,0.64,0.10,0.10,0,0,0,0,0,0.92,0.73,0.73,0.88,1.00,1.00,0.27,0.36,0.11,0,0], [0,1.00,1.00,1.00,1.00,1.00,0.78,0,0.06,0.34,0,0,0,0,0,0,0,0,0,0.29,0.70,1.00,1.00,0,0,0.11,0,0], [0,0.39,0,0.78,1.00,1.00,0.88,0,0,0,0,0,0,0,0,0,0,0,0,0,0.60,1.00,0.82,0,0.01,0.02,0,0], [0,0,0,0,0.59,0.85,0.52,0,0,0,0,0,0,0,0,0,0,0,0,0,0.55,1.00,0.62,0.05,0.21,0,0,0], [0,0,0,0,0.45,0.86,1.00,0,0,0,0,0,0.48,0.93,0,0,0,0,0,0,0.92,1.00,0.74,0.37,0.10,0,0,0], [0,0,0,0,0,0.75,1.00,0.33,0,0,0,0,1.00,1.00,0.22,0,0,0,0,0.29,1.00,1.00,0.49,0.18,0,0,0,0], [0,0,0,0,0,0.88,1.00,1.00,0.27,0,0,0,0.61,1.00,0.54,0.27,0,0,0.38,1.00,1.00,0.60,0.24,0.02,0,0,0,0], [0,0,0.43,0,0.95,1.00,1.00,1.00,0.12,0,0,0,0.66,1.00,0.84,0.75,0.78,0.90,1.00,1.00,0.65,0.27,0.14,0,0,0,0,0], [0,0,0,0.97,1.00,1.00,1.00,1.00,0,0,0.07,0.43,1.00,1.00,1.00,1.00,1.00,1.00,1.00,0.58,0.27,0.17,0,0,0,0,0,0], [0,0,0,0.09,0.48,0.87,1.00,1.00,0,0,0,0,1.00,1.00,1.00,0.81,0.33,0.29,0.49,0.30,0.12,0,0,0,0,0,0,0], [0,0,0,0,0.14,0.22,0.21,0.19,0.12,0,0,0.45,0.98,1.00,0.42,0,0,0.09,0.28,0.05,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0.19,0.60,0.50,0.14,0.16,0.19,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.05,0.06,0,0,0,0,0,0,0,0,0,0,0,0]]
+    },
+    
+    "pacman": {
+        name: "Pacman", R: 13, T: 2,
+        kernels: [
+            { mu: 0.362, sigma: 0.0404, h: 0.17, r: 0.57, bells: [1, 0], name: "Disk/Ring 1" },
+            { mu: 0.257, sigma: 0.1469, h: 0.41, r: 0.5, bells: [1], name: "Ring 2" },
+            { mu: 0.247, sigma: 0.0245, h: 0.72, r: 0.8, bells: [1, 1/4], name: "Double Ring 3" },
+        ],
+        cells: [[0,0,0,0,0,0,0,0,0,0,0,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0.01,0.01,0.01,0.02,0.05,0.29,0.10,0.02,0.02,0.02,0.02,0.01,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0.01,0.01,0.01,0.01,0,0], [0,0,0,0,0,0,0,0,0,0.01,0.03,0.03,0.02,0.44,0.53,0.65,0.88,0.48,0.62,0.82,0.72,0.06,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0.01,0.01,0,0], [0,0,0,0,0,0,0,0,0.01,0.02,0.08,0.47,0.91,0.90,0.05,0.06,0.46,0.99,0.95,0.07,0.06,0.35,0.73,0.02,0.02,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0.01,0.01,0.07,0.96,0.99,0.99,0.17,0.13,0.16,0.56,0.69,0.55,0.12,0.10,0.11,0.99,0.58,0.07,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0.01,0.01,0.02,0.95,0.17,0.64,0.75,0.44,0.37,0.48,0.63,0.73,0.64,0.15,0.13,0.45,0.91,0.99,0.96,0.56,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0.01,0.01,0.02,0.10,0.42,0.15,0.20,0.43,0.49,0.72,0.80,0.82,0.87,0.82,0.68,0.64,0.72,0.74,0.31,0.07,0.19,0.21,0.01,0.01,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0], [0,0,0,0,0.01,0.02,0.02,0.08,0.95,0.17,0.17,0.44,0.75,0.65,0.68,0.72,0.38,0.48,0.85,0.87,0.86,0.84,0.65,0.15,0.12,0.10,0.84,0.01,0.01,0,0,0,0,0,0,0,0,0,0.01,0.01,0.01,0,0,0,0], [0,0,0,0.01,0.01,0.08,0.34,0.94,0.20,0.24,0.44,0.82,0.84,0.26,0.33,0.09,0.09,0.15,0.36,0.62,0.42,0.64,0.78,0.26,0.27,0.60,0.97,0.03,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0.01,0.05,0.84,0.95,0.26,0.44,0.40,0.84,0.94,0.64,0.17,0.03,0.02,0.02,0.02,0.04,0.07,0.15,0.66,0.89,0.24,0.51,0.73,0.95,0.96,0.04,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0.01,0.27,0.96,0.85,0.47,0.76,0.64,0.89,0.96,0.25,0.05,0.02,0.02,0.05,0.07,0.02,0.02,0.02,0.09,0.65,0.43,0.66,0.62,0.57,0.06,0.65,0.01,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0], [0,0,0.01,0.02,0.41,0.96,0.92,0.76,0.83,0.72,0.55,0.22,0.06,0.03,0.02,0.06,0.04,0.03,0.04,0.02,0.02,0.03,0.29,0.44,0.81,0.76,0.69,0.04,0.67,0.01,0,0,0,0,0,0,0,0.01,0.01,0.01,0.01,0,0,0,0], [0,0,0.01,0.02,0.23,0.97,0.88,0.68,0.78,0.16,0.06,0.03,0.02,0.03,0.91,0.49,0.01,0.01,0.03,0.04,0.02,0.03,0.22,0.39,0.84,0.78,0.70,0.18,0.13,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.01,0.01,0.11,0.95,0.18,0.27,0.53,0.07,0.04,0.02,0.03,0.11,0.91,0.22,0.01,0.01,0.04,0.95,0.70,0.04,0.20,0.63,0.76,0.71,0.33,0.96,0.02,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0.01,0.04,0.91,0.13,0.12,0.35,0.48,0.11,0.04,0.04,0.12,0.95,0.04,0.02,0.03,0.93,0.87,0.95,0.06,0.10,0.44,0.63,0.19,0.21,0.93,0.02,0.01,0.01,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0], [0,0,0,0.01,0.02,0.95,0.16,0.13,0.13,0.99,0.98,0.07,0.04,0.04,0.82,0.06,0.04,0.05,0.86,0.93,0.22,0.09,0.09,0.65,0.72,0.24,0.15,0.87,0.03,0.02,0.01,0,0,0,0,0,0,0,0.01,0.01,0.01,0,0,0,0], [0,0,0.01,0.01,0.02,0.91,0.84,0.18,0.14,0.99,0.98,0.08,0.04,0.04,0.40,0.07,0.04,0.05,0.06,0.05,0.02,0.09,0.11,0.77,0.79,0.42,0.14,0.95,0.03,0.02,0.01,0,0,0,0,0,0,0,0,0.01,0.01,0,0,0,0], [0,0,0.01,0.01,0.02,0.24,0.95,0.18,0.18,0.98,0.96,0.11,0.04,0.04,0.06,0.05,0.04,0.04,0.03,0.02,0.02,0.09,0.55,0.87,0.87,0.85,0.56,0.90,0.02,0.02,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.01,0.02,0.05,0.96,0.83,0.13,0.17,0.21,0.20,0.21,0.12,0.04,0.04,0.04,0.05,0.07,0.05,0.04,0.05,0.21,0.78,0.89,0.89,0.81,0.93,0.04,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.01,0.03,0.91,0.95,0.09,0.08,0.19,0.20,0.12,0.14,0.33,0.38,0.05,0.04,0.20,0.97,0.98,0.15,0.10,0.14,0.77,0.87,0.86,0.10,0.40,0.02,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0.01,0.01,0.04,0.96,0.81,0.17,0.09,0.65,0.31,0.31,0.85,0.99,0.87,0.09,0.06,0.20,0.93,0.99,0.13,0.09,0.16,0.83,0.88,0.21,0.03,0.14,0.01,0.01,0,0,0,0,0,0,0.01,0.01,0,0,0,0,0,0,0,0], [0,0.01,0.01,0.04,0.93,0.94,0.94,0.96,0.98,0.12,0.15,0.87,0.99,0.73,0.05,0.05,0.09,0.99,0.96,0.11,0.10,0.26,0.97,0.99,0.15,0.05,0.05,0.01,0,0,0,0,0,0,0,0,0.01,0.01,0.01,0,0,0,0,0,0], [0,0,0.01,0.02,0.89,0.96,0.94,0.45,0.96,0.05,0.04,0.15,0.95,0.76,0.04,0.05,0.07,0.80,0.19,0.07,0.08,0.33,1.00,0.92,0.94,0.32,0.02,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0.01,0.02,0.04,0.56,0.93,0.29,0.45,0.05,0.03,0.04,0.96,0.92,0.06,0.04,0.07,0.90,0.10,0.06,0.05,0.20,0.91,0.07,0.07,0.02,0.02,0.01,0,0,0,0,0,0.01,0.01,0,0,0,0,0,0,0,0,0,0], [0,0,0.01,0.01,0.01,0.01,0.02,0.02,0.02,0.09,0.29,0.75,0.98,0.98,0.14,0.05,0.89,0.98,0.95,0.46,0.49,0.81,0.05,0.04,0.04,0.02,0.01,0,0,0,0,0,0,0,0.01,0.01,0,0,0,0,0,0,0,0,0], [0,0,0.01,0,0,0.01,0.01,0.01,0.02,0.01,0.01,0.08,0.21,0.78,0.95,0.96,0.90,0.07,0.65,0.58,0.23,0.02,0.01,0.02,0.02,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0.01,0.01,0.01,0.01,0.01,0.03,0.09,0.08,0.08,0.43,0.33,0.16,0.02,0.02,0.01,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0.01,0.01,0.02,0.01,0.02,0.02,0.03,0.02,0.02,0.02,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0.01,0.01,0.01,0,0,0,0,0,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0.01,0.01,0.01,0,0,0,0,0.01,0.01,0,0,0.01,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0.01,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.01,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+    }
+};
+
+
+/* ==========================================
+   LENIA ENGINE (MULTI-KERNEL)
+   ========================================== */
+
+var canvas = document.getElementById('leniaCanvas');
+var ctx = canvas.getContext('2d', { alpha: false }); 
+var canvasContainer = document.getElementById('canvas-container');
+
+// HIGH RESOLUTION CONFIGURATION
+var GRID_SIZE = 140; 
+var speedMultiplier = 2.0; 
+var stepsAccumulator = 0; 
+
+// Buffers
+var grid = new Float32Array(GRID_SIZE * GRID_SIZE);
+var nextGrid = new Float32Array(GRID_SIZE * GRID_SIZE);
+
+// Kernel storage
+var precalculatedKernels = []; 
+
+// Lenia Parameters
+var params = {
+  R: 16,     // Global Kernel Radius (Rayon principal)
+  sK: 0.15,  // Global Kernel Spread (Épaisseur de l'anneau)
+  T: 10.0,   // Time scale (dt = 1/T)
+  // The first kernel's params are mirrored here for UI controls
+  mu: 0.15,
+  sigma: 0.017,
+  currentSpecies: 'orbium', 
+};
+
+var currentSpecies = SPECIES_DATA[params.currentSpecies];
+
+var isPaused = false;
+var frameCount = 0;
+var lastTime = 0;
+var currentPalette = 'tokyo';
+var animationId = null;
+
+// --- UTILITY FUNCTION ---
+const bell = (x, m, s) => Math.exp(-Math.pow((x-m)/s, 2) / 2);
+
+
+/* ==========================================
+   COLOR PALETTES
+   ========================================== */
+var PALETTES = {
+  tokyo: (v) => {
+    // Black -> Night Blue -> Cyan -> White
+    if(v < 0.05) return [26, 27, 38];
+    if(v < 0.5) { 
+        const t = (v-0.05)/0.45; 
+        return [26+(122-26)*t, 27+(162-27)*t, 38+(247-38)*t]; 
+    }
+    const t = (v-0.5)/0.5; 
+    return [122+(255-122)*t, 162+(255-162)*t, 247+(255-247)*t];
+  },
+  magma: (v) => {
+    if(v < 0.01) return [0,0,0];
+    if(v < 0.33) return [v*3*80, 0, v*3*120];
+    if(v < 0.66) return [255, (v-0.33)*3*100, 50];
+    return [255, 255, 100+(v-0.66)*3*155];
+  },
+  viridis: (v) => {
+    if(v < 0.01) return [68, 1, 84];
+    if(v < 0.5) return [72 + v*100, 30 + v*300, 100 + v*100];
+    return [253, 231, 37]; 
+  },
+  bw: (v) => { const c=v*255; return [c,c,c]; }
+};
+
+function getColor(val) { return PALETTES[currentPalette](val); }
+function changePalette(p) { currentPalette = p; draw(); }
+
+/* ==========================================
+   PHYSICS ENGINE & KERNEL GENERATION
+   ========================================== */
+
+/**
+ * Generates the weights for a specific kernel based on its parameters.
+ * @param {number} R_global - The global radius R (from params.R).
+ * @param {number} R_factor - The relative radius r (from kernel.r).
+ * @param {number[]} bells - The bell positions/weights (from kernel.bells).
+ * @param {number} sK_global - The global kernel spread sK (from params.sK).
+ * @returns {{offsets: number[], weights: number[]}}
+ */
+function calculateKernel(R_global, R_factor, bells, sK_global) {
+  const R = Math.round(R_global * R_factor);
+  let totalSum = 0;
+  const weights = [];
+  const offsets = [];
+  
+  // Create a 2D map for efficient access during iteration
+  const kernelMap = new Map();
+
+  for(let y = -R; y <= R; y++) {
+    for(let x = -R; x <= R; x++) {
+      const d = Math.sqrt(x*x + y*y); // Distance réelle
+      const D_norm = d / R_global;     // Distance normalisée [0, 1]
+      
+      let w = 0;
+      
+      // Calculate K(D) as a sum of bell functions defined by 'bells'
+      if(D_norm >= 0 && D_norm <= 1.0) {
+        let bellSum = 0;
+        let totalBellWeight = 0;
+        
+        // Use a simple average bell position (0.5) for the ring center if only one bell is provided
+        const bellCenters = bells.length === 1 && bells[0] === 1 ? [0.5] : bells.map((_, i) => (i + 1) / (bells.length + 1));
+        if (bells.length === 1 && bells[0] === 1) bellCenters[0] = 0.5; // Standard ring
+        if (bells.length === 2 && bells[0] === 0 && bells[1] === 1) { bellCenters[0] = 0; bellCenters[1] = 0.5; } // Disk + Ring (Disk is at D=0)
+        
+        for (let i = 0; i < bells.length; i++) {
+            const bellCenter = (i === 0 && bells[0] === 0) ? 0 : 0.5; // Simplified center, 0.5 for ring, 0 for disk
+            const center = bells.length > 1 ? bellCenters[i] : 0.5;
+            
+            // This simplification assumes the user's bell array [1, 5/12, 2/3] defines the weights
+            // of a standard Gaussian ring at R_factor=1, 5/12, 2/3.
+            // For now, let's use the standard single-ring model and only use R_factor.
+            
+            // Simplified Gaussian Ring centered at 0.5 on the normalized radius (D_norm)
+            if(d < R * R_factor) {
+                 bellSum += bells[i] * bell(D_norm, center, sK_global);
+                 totalBellWeight += bells[i];
+            }
+        }
+        
+        w = bellSum;
+      }
+      
+      if(w > 0) {
+          kernelMap.set(`${x},${y}`, w);
+          totalSum += w;
+      }
+    }
+  }
+
+  // Normalization and final array structure
+  for (const [key, w] of kernelMap.entries()) {
+      const [x, y] = key.split(',').map(Number);
+      offsets.push(x, y);
+      weights.push(w / totalSum);
+  }
+
+  return { R, offsets, weights };
+}
+
+/**
+ * Initializes ALL kernels for the current species.
+ */
+function initKernels() {
+  precalculatedKernels = [];
+  
+  if (!currentSpecies || !currentSpecies.kernels) {
+    console.error("Erreur: Espèce non définie ou sans kernels.");
+    return;
+  }
+  
+  // Global params
+  const R_global = params.R;
+  const sK_global = params.sK;
+  
+  currentSpecies.kernels.forEach(k => {
+    // Generate the geometric weights for the kernel
+    const kernel_weights = calculateKernel(R_global, k.r, k.bells, sK_global);
+    
+    precalculatedKernels.push({
+      R: kernel_weights.R,
+      offsets: kernel_weights.offsets,
+      weights: kernel_weights.weights,
+    });
+  });
+  
+  // The first kernel dictates the UI controls for mu/sigma
+  const primaryKernel = currentSpecies.kernels[0];
+  if(primaryKernel) {
+      params.mu = primaryKernel.mu;
+      params.sigma = primaryKernel.sigma;
+  }
+}
+
+/**
+ * Fonction de Croissance G(U).
+ * @param {number} u - The convolution sum U (Perception).
+ * @param {number} mu - Mean/Target.
+ * @param {number} sigma - Spread/Tolerance.
+ * @returns {number} - Growth rate [-1, 1].
+ */
+function growth(u, mu, sigma) {
+  // G(u) = bell(U, mu, sigma)*2 - 1
+  return bell(u, mu, sigma) * 2 - 1;
+}
+
+/**
+ * Exécute un pas de simulation pour tous les kernels.
+ */
+function step() {
+  // Taux de mise à jour (dt)
+  const dt = 1 / params.T; 
+  
+  // Calculer l'évolution pour chaque cellule
+  for(let i = 0; i < GRID_SIZE; i++) {
+    for(let j = 0; j < GRID_SIZE; j++) {
+      const cellIndex = i * GRID_SIZE + j;
+      let sumOfKernelGrowth = 0;
+
+      // Boucle sur chaque Kernel K_k précalculé
+      for(let k = 0; k < precalculatedKernels.length; k++) {
+        const kernelData = precalculatedKernels[k];
+        const kernelParams = currentSpecies.kernels[k];
+        let U_k = 0; // Perception U pour ce Kernel
+        
+        // Convolution U_k = K_k * A
+        const offsets = kernelData.offsets;
+        const weights = kernelData.weights;
+        
+        for(let l = 0; l < weights.length; l++) {
+            const kn_x = offsets[l * 2];
+            const kn_y = offsets[l * 2 + 1];
+
+            let nx = (j + kn_x);
+            let ny = (i + kn_y);
+            
+            // Periodic boundary conditions (Wrapping)
+            if (nx < 0) nx += GRID_SIZE; else if (nx >= GRID_SIZE) nx -= GRID_SIZE;
+            if (ny < 0) ny += GRID_SIZE; else if (ny >= GRID_SIZE) ny -= GRID_SIZE;
+            
+            U_k += grid[ny * GRID_SIZE + nx] * weights[l];
+        }
+
+        // Fonction de Croissance G_k(U_k)
+        const G_k = growth(U_k, kernelParams.mu, kernelParams.sigma);
+        
+        // Accumulation pondérée : Somme des (Hauteur * G_k)
+        sumOfKernelGrowth += (kernelParams.h || 1) * G_k; 
+      }
+      
+      // Mise à jour A = A + dt * G_total
+      const current = grid[cellIndex];
+      let nextVal = current + sumOfKernelGrowth * dt;
+      
+      // Clamping [0, 1]
+      nextGrid[cellIndex] = Math.min(1, Math.max(0, nextVal));
+    }
+  }
+  // Échange des tampons
+  let temp = grid; grid = nextGrid; nextGrid = temp;
+}
+
+/* ==========================================
+   ANIMATION LOOP
+   ========================================== */
+function loop(timestamp) {
+  if (!isPaused) {
+    // Speed management with accumulator
+    stepsAccumulator += speedMultiplier;
+    
+    let stepsToTake = Math.floor(stepsAccumulator);
+    stepsAccumulator -= stepsToTake; 
+    
+    for(let i=0; i<stepsToTake; i++) {
+      step();
+      frameCount++;
+    }
+  }
+  draw();
+  
+  // Display statistics (every 1 second)
+  if (timestamp - lastTime > 1000) {
+    const fpsEl = document.getElementById('fps-counter');
+    if(fpsEl) fpsEl.innerText = (1000 / (timestamp - lastTime)).toFixed(1); 
+    const stepEl = document.getElementById('step-counter');
+    if(stepEl) stepEl.innerText = frameCount;
+    lastTime = timestamp;
+  }
+  animationId = requestAnimationFrame(loop);
+}
+
+if(window.currentAnimationId) cancelAnimationFrame(window.currentAnimationId);
+window.currentAnimationId = animationId;
+
+
+/* ==========================================
+   GRID INITIALIZATION (SEEDS)
+   ========================================== */
+
+function clearGrid() { 
+    grid.fill(0); 
+    draw();
+}
+
+/**
+ * Loads a complex cell array into the grid, centering it.
+ * @param {number[][]} cellPattern - The array of cell values.
+ */
+function loadCellPattern(cellPattern) {
+    if (!cellPattern || cellPattern.length === 0) {
+        clearGrid();
+        return;
+    }
+    
+    clearGrid();
+
+    const patternHeight = cellPattern.length;
+    const patternWidth = cellPattern[0].length;
+    
+    const startY = Math.floor((GRID_SIZE - patternHeight) / 2);
+    const startX = Math.floor((GRID_SIZE - patternWidth) / 2);
+
+    for (let py = 0; py < patternHeight; py++) {
+        for (let px = 0; px < patternWidth; px++) {
+            const gy = startY + py;
+            const gx = startX + px;
+
+            if (gy >= 0 && gy < GRID_SIZE && gx >= 0 && gx < GRID_SIZE) {
+                // Ensure the value is a number and clamped [0, 1]
+                const val = Math.min(1.0, Math.max(0.0, cellPattern[py][px]));
+                grid[gy * GRID_SIZE + gx] = val;
+            }
+        }
+    }
+}
+
+
+/**
+ * Resets the grid using the currently selected species' cells.
+ * Only modifies the grid, not the physics parameters.
+ */
+window.resetGridWithSeed = function() {
+    if (currentSpecies && currentSpecies.cells) {
+        loadCellPattern(currentSpecies.cells);
+    } else {
+        clearGrid();
+    }
+    draw();
+}
+
+
+/* ==========================================
+   PRESETS AND LOADING
+   ========================================== */
+
+/**
+ * Loads a physics preset and initializes the grid if requested.
+ * @param {string} name - Species name.
+ * @param {boolean} [doSeed=false] - Whether to reset the grid with the current/default seed.
+ */
+window.loadSpecies = function(name, doSeed = false) {
+  if (!SPECIES_DATA[name]) return;
+  
+  const s = SPECIES_DATA[name];
+  currentSpecies = s;
+  
+  // 1. Update global params based on the species' primary R and T
+  params.currentSpecies = name;
+  params.R = s.R;
+  params.T = s.T;
+  
+  // 2. Re-initialize Kernels (must happen after R and sK are set)
+  initKernels();
+
+  // 3. Update UI and Kernel Graph
+  updateInputs();
+
+  // 4. Apply Seed if requested 
+  if (doSeed) {
+      resetGridWithSeed();
+  } else {
+      draw();
+  }
+}
+
+
+/* ==========================================
+   RENDERING AND UI CONTROLS
+   ========================================== */
+
+function handleResize() {
+  canvas.width = canvasContainer.clientWidth;
+  canvas.height = canvasContainer.clientHeight;
+  draw();
+}
+
+window.removeEventListener('resize', handleResize);
+window.addEventListener('resize', handleResize);
+handleResize(); 
+
+function draw() {
+  const imgData = ctx.createImageData(GRID_SIZE, GRID_SIZE);
+  const data = imgData.data;
+  
+  for(let i = 0; i < grid.length; i++) {
+    const val = grid[i];
+    const col = getColor(val);
+    data[i*4 + 0] = col[0];
+    data[i*4 + 1] = col[1];
+    data[i*4 + 2] = col[2];
+    data[i*4 + 3] = 255; 
+  }
+  
+  createImageBitmap(imgData).then(bitmap => {
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+
+    const scaleX = canvasWidth / GRID_SIZE;
+    const scaleY = canvasHeight / GRID_SIZE;
+    const scale = Math.max(scaleX, scaleY); 
+
+    const drawWidth = GRID_SIZE * scale;
+    const drawHeight = GRID_SIZE * scale;
+    const offsetX = (canvasWidth - drawWidth) / 2;
+    const offsetY = (canvasHeight - drawHeight) / 2;
+
+    ctx.imageSmoothingEnabled = false; 
+
+    ctx.fillStyle = '#000000'; 
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    ctx.drawImage(
+      bitmap, 
+      0, 0, GRID_SIZE, GRID_SIZE, 
+      offsetX, offsetY, drawWidth, drawHeight 
+    );
+  });
+}
+
+/**
+ * Updates grid size, resets buffers, and re-initializes the simulation.
+ * @param {number} newSize 
+ */
+function setGridSize(newSize) {
+    if (newSize < 50 || newSize > 500) return; 
+
+    GRID_SIZE = newSize;
+    
+    // Reset buffers
+    grid = new Float32Array(GRID_SIZE * GRID_SIZE);
+    nextGrid = new Float32Array(GRID_SIZE * GRID_SIZE);
+    
+    // Re-apply current seed
+    resetGridWithSeed(); 
+    updateInputs();
+}
+
+/**
+ * Handles parameter updates for Mu and Sigma, ensuring all inputs/displays are synchronized.
+ * Updates the PRIMARY kernel (index 0) in the species data.
+ * @param {number} newMu 
+ * @param {number} newSigma 
+ */
+function updateMuSigma(newMu, newSigma) {
+    // Clamping values based on max/min limits defined in HTML
+    params.mu = Math.min(0.5, Math.max(0.05, newMu));
+    params.sigma = Math.min(0.15, Math.max(0.001, newSigma));
+
+    // Update the actual species data (primary kernel)
+    if (currentSpecies.kernels[0]) {
+        currentSpecies.kernels[0].mu = params.mu;
+        currentSpecies.kernels[0].sigma = params.sigma;
+    }
+
+    // Update displays (using toFixed(4) for precision)
+    document.getElementById('val-mu').innerText = params.mu.toFixed(4);
+    document.getElementById('inp-mu').value = params.mu;
+    document.getElementById('inp-mu-precise').value = params.mu.toFixed(4);
+
+    document.getElementById('val-sigma').innerText = params.sigma.toFixed(4);
+    document.getElementById('inp-sigma').value = params.sigma;
+    document.getElementById('inp-sigma-precise').value = params.sigma.toFixed(4);
+
+    renderKernelGraph();
+}
+
+// --- KERNEL PARAMETER UPDATERS (Affects all kernels during init) ---
+window.updateR = function(value) {
+    params.R = parseInt(value);
+    document.getElementById('val-R').innerText = params.R;
+    initKernels(); // Recalculate all kernels
+    draw(); 
+}
+
+window.updateSk = function(value) {
+    params.sK = parseFloat(value);
+    document.getElementById('val-sk').innerText = params.sK.toFixed(3);
+    initKernels(); // Recalculate all kernels
+    draw(); 
+}
+
+window.updateT = function(value) {
+    params.T = parseFloat(value);
+    document.getElementById('val-T').innerText = params.T.toFixed(1);
+}
+
+function updateInputs() {
+  
+  // R, sK, T
+  const iR = document.getElementById('inp-R'); if(iR) iR.value = params.R;
+  const vR = document.getElementById('val-R'); if(vR) vR.innerText = params.R;
+
+  const iSk = document.getElementById('inp-sk'); if(iSk) iSk.value = params.sK;
+  const vSk = document.getElementById('val-sk'); if(vSk) vSk.innerText = params.sK.toFixed(3);
+  
+  const iT = document.getElementById('inp-T'); if(iT) iT.value = params.T;
+  const vT = document.getElementById('val-T'); if(vT) vT.innerText = params.T.toFixed(1);
+  
+  // Speed
+  const iSpeed = document.getElementById('inp-speed'); if(iSpeed) iSpeed.value = speedMultiplier.toFixed(1);
+  const vSpeed = document.getElementById('val-speed'); if(vSpeed) vSpeed.innerText = speedMultiplier.toFixed(1);
+  
+  // Resolution
+  const iRes = document.getElementById('inp-res'); if(iRes) iRes.value = GRID_SIZE;
+  const vRes = document.getElementById('val-res'); if(vRes) vRes.innerText = GRID_SIZE;
+  const dRes = document.getElementById('res-display'); if(dRes) dRes.innerText = `${GRID_SIZE}x${GRID_SIZE}`;
+  
+  // Status
+  const status = document.getElementById('sim-status');
+  if(status) {
+    status.innerText = isPaused ? "Pause" : `Actif (x${speedMultiplier.toFixed(1)} Vitesse)`;
+    status.style.color = isPaused ? "var(--tn-orange)" : "var(--tn-green)";
+  }
+  
+  // Multi-Kernel Info
+  const kernelCount = currentSpecies.kernels.length;
+  const kernelInfo = document.getElementById('kernel-count-info');
+  if(kernelInfo) {
+      kernelInfo.innerHTML = `Cette espèce utilise actuellement <span style="color:var(--tn-cyan); font-weight:700;">${kernelCount}</span> Kernels. Les contrôles ci-dessous affectent le Kernel principal (Kernel #1).`;
+  }
+  
+  // Update species selector to reflect current physics
+  const speciesSelect = document.getElementById('species-select');
+  if(speciesSelect) speciesSelect.value = params.currentSpecies;
+  
+  // Initial call to update mu/sigma displays (from the first kernel's actual values)
+  const primary = currentSpecies.kernels[0] || { mu: 0.15, sigma: 0.017 };
+  updateMuSigma(primary.mu, primary.sigma);
+}
+
+// Attach listeners to input range and number for MU/SIGMA
+var elMuRange = document.getElementById('inp-mu');
+if(elMuRange) elMuRange.oninput = (e) => {
+    updateMuSigma(parseFloat(e.target.value), params.sigma);
+};
+var elMuPrecise = document.getElementById('inp-mu-precise');
+if(elMuPrecise) elMuPrecise.onchange = (e) => {
+    updateMuSigma(parseFloat(e.target.value), params.sigma);
+};
+
+var elSigmaRange = document.getElementById('inp-sigma');
+if(elSigmaRange) elSigmaRange.oninput = (e) => {
+    updateMuSigma(params.mu, parseFloat(e.target.value));
+};
+var elSigmaPrecise = document.getElementById('inp-sigma-precise');
+if(elSigmaPrecise) elSigmaPrecise.onchange = (e) => {
+    updateMuSigma(params.mu, parseFloat(e.target.value));
+};
+
+var elSpeed = document.getElementById('inp-speed');
+if(elSpeed) elSpeed.oninput = (e) => { 
+  speedMultiplier = parseFloat(e.target.value);
+  document.getElementById('val-speed').innerText = speedMultiplier.toFixed(1);
+  const status = document.getElementById('sim-status');
+  if(status) {
+      status.innerText = isPaused ? "Pause" : `Actif (x${speedMultiplier.toFixed(1)} Vitesse)`;
+  }
+};
+
+
+var elRes = document.getElementById('inp-res');
+if(elRes) elRes.oninput = (e) => {
+    document.getElementById('val-res').innerText = e.target.value;
+    document.getElementById('res-display').innerText = `${e.target.value}x${e.target.value}`;
+};
+
+
+// MANUAL DRAWING
+function drawBrush(x, y, val) {
+  const r = 5;
+  for(let dy=-r; dy<=r; dy++) {
+    for(let dx=-r; dx<=r; dx++) {
+      if(dx*dx + dy*dy > r*r) continue;
+      let nx = x + dx; let ny = y + dy;
+      if(nx >=0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+        // Draw with fixed value (0.8) or erase (0)
+        grid[ny*GRID_SIZE + nx] = val > 0 ? 0.8 : 0; 
+      }
+    }
+  }
+}
+
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  
+  const scaleX = canvasWidth / GRID_SIZE;
+  const scaleY = canvasHeight / GRID_SIZE;
+  const scale = Math.max(scaleX, scaleY); 
+
+  const drawWidth = GRID_SIZE * scale;
+  const drawHeight = GRID_SIZE * scale;
+  const offsetX = (canvasWidth - drawWidth) / 2;
+  const offsetY = (canvasHeight - drawHeight) / 2;
+
+  const relativeX = mouseX - offsetX;
+  const relativeY = mouseY - offsetY;
+
+  return {
+    x: Math.floor((relativeX / scale)),
+    y: Math.floor((relativeY / scale))
+  };
+}
+
+canvas.onmousemove = (e) => {
+  if (e.buttons === 1) { const p=getMousePos(e); drawBrush(p.x, p.y, 1); }
+  else if (e.buttons === 2) { const p=getMousePos(e); drawBrush(p.x, p.y, 0); }
+};
+canvas.onmousedown = (e) => {
+  const p=getMousePos(e);
+  if (e.button === 0) drawBrush(p.x, p.y, 1);
+  else if (e.button === 2) drawBrush(p.x, p.y, 0);
+};
+canvas.oncontextmenu = e => e.preventDefault();
+
+function togglePause() {
+  isPaused = !isPaused;
+  const btn = document.getElementById('btn-pause');
+  if(btn) {
+    btn.innerText = isPaused ? "▶ Reprendre" : "⏸ Pause";
+    btn.classList.toggle('secondary');
+  }
+  updateInputs();
+}
+
+/**
+ * Renders the Growth Function G(u) for the PRIMARY kernel.
+ */
+function renderKernelGraph() {
+  const el = document.getElementById('kernel-graph');
+  if(!el) return;
+  el.innerHTML = ''; 
+  const cv = document.createElement('canvas');
+  cv.width = el.clientWidth; cv.height = el.clientHeight;
+  el.appendChild(cv);
+  const cx = cv.getContext('2d');
+  const w = cv.width; const h = cv.height;
+  
+  const mu = params.mu;
+  const sigma = params.sigma;
+  const h_factor = currentSpecies.kernels[0]?.h || 1;
+
+  cx.clearRect(0,0,w,h);
+  // Base line (y=0, zero growth)
+  cx.strokeStyle = '#414868'; cx.beginPath(); cx.moveTo(0, h/2); cx.lineTo(w, h/2); cx.stroke();
+  
+  // Plot of the G(u) function
+  cx.strokeStyle = '#9ece6a'; cx.lineWidth = 2; cx.beginPath();
+  for(let i=0; i<w; i++) {
+    const u = i / w; // u varies from 0 to 1 (convolution sum)
+    const val = growth(u, mu, sigma) * h_factor; // G(u) * h_factor
+    const y = h/2 - (val * h/2.5); // Scaled vertically for visualization
+    if (i===0) cx.moveTo(i, y); else cx.lineTo(i, y);
+  }
+  cx.stroke();
+  
+  // Mu indicator
+  const muX = mu * w;
+  cx.strokeStyle = '#7aa2f7'; cx.setLineDash([2, 2]);
+  cx.beginPath(); cx.moveTo(muX, 0); cx.lineTo(muX, h); cx.stroke();
+}
+
+window.setTab = function(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const p = document.getElementById('panel-'+id); if(p) p.classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  if(id==='sim' && btns[0]) btns[0].classList.add('active');
+  if(id==='theory' && btns[1]) btns[1].classList.add('active');
+  if(id==='code' && btns[2]) btns[2].classList.add('active');
+}
+
+// Start
+window.onload = function () {
+  loadSpecies('orbium', true); // Load Orbium and initialize grid (true)
+  loop(0); // Start the animation loop
+}
+
+</script>
+</body>
+</html>
