@@ -47,8 +47,6 @@ python -m http.server 8000
 - 🧮 **Faddeev-LeVerrier** - Polynôme caractéristique
 - etc...
 
-> [!NOTE]
-> Appuyez sur `?` dans chaque module pour afficher les raccourcis clavier.
 
 ---
 
