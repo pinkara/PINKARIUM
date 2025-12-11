@@ -382,20 +382,20 @@ print("Chemin trouvé :", path)</code></pre>
         $$ f(n) = g(n) + h(n) $$
       </div>
       
-      <p>L'algorithme évalue chaque nœud $n$ en combinant deux informations :</p>
+      <p>L'algorithme évalue chaque nœud \(n\) en combinant deux informations :</p>
       
       <ul style="list-style:none; padding:0; margin-top:15px;">
         <li style="margin-bottom:15px; border-left:3px solid var(--tn-green); padding-left:10px;">
-          <strong style="color:var(--tn-green); display:block;">$g(n)$ : Le Coût Réel</strong>
+          <strong style="color:var(--tn-green); display:block;">\(g(n)\) : Le Coût Réel</strong>
           Somme des coûts depuis le départ.
           <div style="margin-top:5px; background:var(--tn-bg-2); padding:8px; border-radius:4px;">
             $$ g(n) = \sum_{i=0}^{k-1} \text{cost}(p_i, p_{i+1}) $$
-            <div style="font-size:0.75rem; color:var(--tn-comment); margin-top:4px;">Avec $p_0 = \text{Start}$ et $p_k = n$.</div>
+            <div style="font-size:0.75rem; color:var(--tn-comment); margin-top:4px;">Avec \(p_0 = \text{Start}\) et \(p_k = n\).</div>
           </div>
         </li>
         
         <li style="margin-bottom:15px; border-left:3px solid var(--tn-yellow); padding-left:10px;">
-          <strong style="color:var(--tn-yellow); display:block;">$h(n)$ : L'Heuristique</strong>
+          <strong style="color:var(--tn-yellow); display:block;">\(h(n)\) : L'Heuristique</strong>
           Estimation de la distance restante.
           
           <div style="margin-top:8px;">
@@ -412,7 +412,7 @@ print("Chemin trouvé :", path)</code></pre>
             <div style="font-weight:bold; color:var(--tn-magenta); font-size:0.85rem;">3. Octile (8 directions)</div>
             <div style="background:var(--tn-bg-2); padding:6px; border-radius:4px;">
                $$ h(n) = (\sqrt{2}-1) \min(\Delta x, \Delta y) + \max(\Delta x, \Delta y) $$
-               <div style="font-size:0.7rem; color:var(--tn-comment); margin-top:2px;">Où $\Delta x, \Delta y$ sont les distances absolues.</div>
+               <div style="font-size:0.7rem; color:var(--tn-comment); margin-top:2px;">Où \(\Delta x, \Delta y\) sont les distances absolues.</div>
             </div>
           </div>
         </li>
