@@ -27,7 +27,7 @@
             --tn-bg: #1a1b26; --tn-bg-2: #24283b; --tn-fg: #c0caf5; 
             --tn-accent: #7aa2f7; --tn-cyan: #7dcfff; --tn-green: #9ece6a;
             --tn-orange: #ff9e64; --tn-magenta: #bb9af7; --tn-red: #f7768e;
-            --tn-border: #414868; --tn-comment: #565f89;
+            --tn-border: #414868; --tn-comment: #565f89; --tn-logo: #1abc9c;
         }
 
         body {
@@ -55,10 +55,12 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
         }
         .logo-box {
-            width: 40px; height: 40px; background: linear-gradient(135deg, var(--tn-magenta), var(--tn-accent)); 
-            border-radius: 8px; display: flex; align-items: center; justify-content: center; 
+            width: 40px; height: 40px; 
+            background: linear-gradient(135deg, var(--tn-logo), var(--tn-accent)); 
+            border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; 
             font-weight: 800; color: #1a1b26; font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(187, 154, 247, 0.3);
+            box-shadow: 0 4px 12px #1abc9c4d;
         }
 
         h1 { color: var(--tn-fg); font-weight: 800; font-size: 1.1rem; margin: 0; }
